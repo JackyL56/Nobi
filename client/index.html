@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nobi</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="indexStyle.css">
+
+  </head>
+  <body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
+
+    
+    <div id="header"> 
+      <h1>Nobi <img src="./images/Logo.png" alt="Logo" id="logo"></h1> 
+      <h5 id="subTitle">A deduction puzzle by Cameron Browne &copy; 2019</h2>
+    </div>
+    
+    <div id="startPage" class="start">
+      
+      <div class="form">
+        <h2>Welcome to the deduction Puzzle Nobi</h2>
+        <form>
+
+
+            <h3>Please enter a name, which we will use to store your results:</h3>
+            <div>
+              <input type="text" id="username" name ="username" placeholder="Username"/>
+              <p id="user-alert" class="alert">*Please fill this out</p>
+            </div>
+            
+            <h3>Are you an Adult? (>18)</h3>
+            <div class="ageContainer">
+              <div class="radio">
+                <input id="radio-yes" name="radio" type="radio" value="1">
+                <label for="radio-yes" class="radio-label">Yes</label>
+              </div>
+            
+              <div class="radio">
+                <input id="radio-no" name="radio" type="radio" value="0">
+                <label  for="radio-no" class="radio-label">No</label>
+              </div>
+              
+              <p id="age-alert" class="alert">*Please fill this out</p>
+            </div>
+      
+            <h3>How much Experience do you have with Puzzles? (Beginner to Expert)</h3>
+            <div id="starRating">
+              <fieldset class="rating">
+                <input type="radio" id="star5" name="rating" value="5" /><label class = "full" for="star5" title="Expert III - 5 stars"></label>
+                <input type="radio" id="star4half" name="rating" value="4.5" /><label class="half" for="star4half" title="Expert II - 4.5 stars"></label>
+                <input type="radio" id="star4" name="rating" value="4" /><label class = "full" for="star4" title="Expert I - 4 stars"></label>
+                <input type="radio" id="star3half" name="rating" value="3.5" /><label class="half" for="star3half" title="Intermediate III - 3.5 stars"></label>
+                <input type="radio" id="star3" name="rating" value="3" /><label class = "full" for="star3" title="Intermediate II - 3 stars"></label>
+                <input type="radio" id="star2half" name="rating" value="2.5" /><label class="half" for="star2half" title="Intermediate I - 2.5 stars"></label>
+                <input type="radio" id="star2" name="rating" value="2" /><label class = "full" for="star2" title="Beginner III- 2 stars"></label>
+                <input type="radio" id="star1half" name="rating" value="1.5" /><label class="half" for="star1half" title="Beginner II - 1.5 stars"></label>
+                <input type="radio" id="star1" name="rating" value="1" /><label class = "full" for="star1" title="Beginner I - 1 star"></label>
+                <input type="radio" id="starhalf" name="rating" value="0.5" /><label class="half" for="starhalf" title="None - 0.5 stars"></label>
+              </fieldset>
+              <p id="exp-alert" class="alert">*Please fill this out</p>
+            </div>
+
+            <div id="information">
+              <h3>Disclosure before starting:</h3>
+              <p>We will store your timings, but these will be kept confidential.</p>
+              <!-- <p>You will first go through a short tutorial on the rules of the puzzle.</p> -->
+              <p>Currently, the game is not supported on mobile phones. </p>
+              <p>Do not resize your browser after pressing start for the best experience!</p>
+              <p>This web application uses Javascript. Make sure to enable it if the Start button does not work.</p>
+              <p>The progress on your current Puzzle won't be saved. If you decide to quit and come back another time, 
+                you can prevent getting your previous Puzzles by entering the <b><em>exact same</em></b> information on this page. (Tip: Make your Username is as unique as possible)
+              </p>
+            </div>
+            <button type="button" id="btnStart" class="btn btn-primary btn-block btn-large">Start</button>  
+        </form>
+      </div>
+    
+    </div>
+
+    <div id="tutorialPage" class="tutorial">
+      <div class="tutText">
+        <h2>&#x2B21 Goal:</h2>
+        <h3>Colour all uncoloured cells in a hexagonal board</h3>
+        <h2>&#x2B21 Rules:</h2>
+        <div>
+          <p class="rule shift-right">&#x2460 Three cells of the same colour never meet</p>
+          <img src="./images/Rule 1.png" alt="No Triplet Rule" id="rule-1" class="rule-png">  
+          <p class="rule shift-right">&#x2461 Each colour form a single connected group</p>
+          <img src="./images/Rule 2.png" alt="Single Connected Group" id="rule-2" class="rule-png">
+        </div>
+        <h2>&#x2B21 How to colour the cells:</h2>
+        <div>
+          <p class="shift-right">
+            &#x2B22 <i>Right-Click:</i> <span class="explanation">Select the colour</span> <br>
+            &#x2B22 <i>Left-Click:</i> <span class="explanation">Colour using selected colour (If Rule &#x2460 is not violated)</span> <br>
+            &#x2B22 <i>Double-Click:</i> <span class="explanation">Uncolour</span><br>
+          </p>
+        </div>
+        <p class="shift-down center">Try it out on the following board below:</p>
+      </div>
+
+      <div id="tutBoard1"></div>
+
+      <div class="tutText" class="tutBoard">
+        <p class="center shift-up">The rectangular box shows you your currently selected colour <br></p>
+        <p class="shift-right">
+          <i>&#x2B22 Hold Left-Click and Drag:</i> <br>
+            <span class="explanation shift-right">&#8627 Colours dragged-over hexagons using the initially clicked hexagon's colour<br></span>
+            <span class="explanation shift-right">&#8627 Drag-colouring colours until dragging over the first fixed coloured hexagon or a same-coloured hexagon.</span>
+        </p>
+        <p class="shift-down center">Try it out on the following board below:</p>
+      </div>
+      
+      
+      <div id="tutBoard2" class="tutBoard"></div>
+
+      <div class="tutText">
+        <h2>&#x2B21 Buttons:</h2>
+        <p class="shift-right shift-up-2">
+          At the bottom of the Puzzle, there are two buttons: <br>
+          <span class="shift-right">&#8627 Reset Button: <span class="explanation">Reset the Puzzle</span>  <br> </span>
+          <span class="shift-right">&#8627 Next Button: <span class="explanation">Move on to the next Puzzle</span>  </span>
+          
+        </p>
+
+        <div class="btn-prompt">
+          <button type="button" class="btn-Game btnReset">Reset</button>
+          <button type="button" class="btn-Game">Next</button>
+        </div>
+
+      </div>
+      
+      <div class="tutText">
+        <h2>&#x2B21 Notes:</h2>
+        <p class="shift-right">
+          &#8618 Black Border on a hexagon: The colour is fixed. <br>
+          &#8618 The game automatically checks for the Triplet rule (Rule &#x2460) before colouring. <br>
+          &#8618 It is not possible to select white as your current colour, since it represents the 'uncoloured' state and is technically not a colour. Use Double-Click instead!
+        </p>
+      </div>
+      
+      <div class="tutText">
+        <h2>&#x2B21 Press Play to Start</h2>
+        <div class="btn-prompt">
+          <button type="button" id="btnPlay" class="btn-Game btnNext">Play</button> 
+        </div> 
+      </div>
+
+    </div>
+
+    <div id="gamePage">
+      <div id="center">
+        <div id="gameCanvas"></div>
+        <div class="btn-prompt">
+          <button type="button" id="btnReset" class="btn-Game btnReset">Reset</button>
+          <button type="button" id="btnNextPuzzle" class="btnNext btn-Game">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="solvedOverlay" class="overlay">
+        <div id="pop-wrap" class="modal-wrap">
+          <h2 class="overlay-H2">Congratulations</h2>
+          <div id="pop-content" class="pop-content">
+            <p>You have succesfully solved this puzzle.</p>
+          </div>
+          <div id="pop-prompt" class="overlay-btn-prompt">
+            <button type="button" id="btnNextSolved" class="btnNext btn btn-primary btn-large">Next Puzzle</button>
+            <button type="button" id="btnEnd" class="btn btn-primary btn-large">End</button>
+          </div>
+        </div>
+
+        <div id="end-confirm" class="overlay hidden">
+          <div class="modal-wrap confirm">
+            <div class="modal-content">
+              <p>Do you confirm you want to stop?</p>
+            </div>
+            <div class="overlay-btn-prompt">
+              <button type="button" id="btnEndYes" class="btn btn-primary btn-large">Confirm</button>
+              <button type="button" id="btnEndNo" class="btn btn-primary btn-large">Back</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div id="finishedOverlay" class="overlay">
+      <div id="finished-wrap" class="modal-wrap">
+        <h2 class="overlay-H2">Congratulations</h2>
+        <div id="finished-content" class="modal-content">
+          <p>You have succesfully solved all the puzzles! <br></p>
+        </div>
+        <div class="overlay-btn-prompt">
+          <button type="button" id="btnFinished" class="btn btn-primary btn-large">Finished</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Scripts--> 
+    <script src="./../javascripts/point.js"></script>
+    <script src="./../javascripts/hex.js"></script>
+    <script src="./../javascripts/grid.js"></script>
+    <script src="./../javascripts/nobi.js"></script>
+    <script src="./../javascripts/main.js"></script>
+
+
+
+    </body>
+</html>

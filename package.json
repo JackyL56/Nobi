@@ -1,0 +1,17 @@
+{
+  "name": "nobiapp",
+  "version": "0.0.1",
+  "description": "This app includes the deduction puzzle game Nobi.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app"
+  },
+  "author": "Jacky Liu",
+  "license": "MIT",
+  "dependencies": {
+    "@svgdotjs/svg.js": "^3.0.16",
+    "express": "^4.17.1",
+    "sqlite3": "^4.1.1"
+  }
+}
