@@ -12,7 +12,7 @@ const db = new sqlite3.Database('./db/nobi.db', (err) => {
     console.log('Connected to the nobi SQlite database.');
 });
 
-
+// app.set("port",process.env.PORT || 80);
 app.set("port",process.env.PORT || 3000);   // Setting Port of the web application
 
 
@@ -118,7 +118,7 @@ app.post('/start',(req,res) =>{
 app.post('/logging',(req,res) =>{
 
     let insertQuery = "INSERT INTO user_moves VALUES (" + req.body.uid + "," + req.body.pid + "," + req.body.q + "," + req.body.r + "," + req.body.s + "," + req.body.c + ","+ req.body.moveNumber + "," + req.body.moveTime + "," + req.body.solved +")";
-    console.log(insertQuery);
+    // console.log(insertQuery);
         db.run( insertQuery, function(err) {
             if(err){
                 //Oops something went wrong

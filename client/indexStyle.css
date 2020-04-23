@@ -264,11 +264,11 @@ h2.overlay-H2 {
   margin: 0 0 3rem;
 }
 
-#solvedOverlay{z-index: 10;}
+#solvedOverlay{z-index: 1010;}
 
-#pop-wrap{z-index: 11;}
+#pop-wrap{z-index: 1011;}
 
-#end-confirm{z-index: 12;}
+#end-confirm{z-index: 1012;}
 
 
 .overlay-btn-prompt .btn {

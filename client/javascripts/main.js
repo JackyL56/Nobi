@@ -140,14 +140,19 @@ $(document).ready(() => {
 
     // Button to get the next Puzzle
     $('.btnNext').click(function(){
-        $("#solvedOverlay").hide();
-        $('#gameCanvas').empty();
-        currentPuzzle = getRandomPuzzle(puzzle_done);
-        // game = new Nobi(userid,currentPuzzle);
-        if(currentPuzzle){ // Checks if we have finished all the puzzles
-            grid = game.drawBoard(currentPuzzle)
-    
-        }
+        if(this.id == 'btnNextPuzzle'){  // Skip Puzzle Button
+            // Confirm 
+            $('#nextConfirmOverlay').show();
+        } else { // Solved the Puzzle
+            $("#solvedOverlay").hide();
+            $('#gameCanvas').empty();
+            currentPuzzle = getRandomPuzzle(puzzle_done);
+            // game = new Nobi(userid,currentPuzzle);
+            if(currentPuzzle){ // Checks if we have finished all the puzzles
+                grid = game.drawBoard(currentPuzzle)
+        
+            }
+        } 
     });
 
     // Reset button, to reset the colours of the puzzle
@@ -174,6 +179,20 @@ $(document).ready(() => {
      // Cancel End Button
      $('#btnEndNo').click(function(){
         $('#end-confirm').hide();
+    });
+
+    $('#btnNextYes').click(function(){
+        $('#nextConfirmOverlay').hide();
+        $('#gameCanvas').empty();
+        currentPuzzle = getRandomPuzzle(puzzle_done);
+        // game = new Nobi(userid,currentPuzzle);
+        if(currentPuzzle){ // Checks if we have finished all the puzzles
+            grid = game.drawBoard(currentPuzzle)
+        }
+    });
+
+    $('#btnNextNo').click(function(){
+        $('#nextConfirmOverlay').hide();
     });
 
     $('#btnFinished').click(function(){

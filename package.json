@@ -12,6 +12,8 @@
   "dependencies": {
     "@svgdotjs/svg.js": "^3.0.16",
     "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "highland": "^2.13.5",
     "sqlite3": "^4.1.1"
   }
 }
