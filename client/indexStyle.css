@@ -121,17 +121,20 @@ body {
 	width: 100%;
 	height:100%;
 }
-.form h2 { font-size: 200% ;color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; padding-bottom: 20px;}
+.form h2 { font-size: 3.5rem ;color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; padding-bottom: 20px;}
 
-.form h3 { font-size: 100% ;color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; padding-top: 10px;padding-bottom: 10px;}
+.form h3 { font-size: 1rem ;color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; padding-top: 10px;padding-bottom: 10px;}
 
-.form p{font-size: 75%; color: #fff; line-height: 1.5em;text-align:center;padding-bottom: 10px;}
+.form p{font-size: 1.25rem; color: #fff; line-height: 1.5em;text-align:center;padding-bottom: 10px;margin-bottom: 1em;}
 
-.alert{
-	display: none;
+p.disclosure{
+	font-size: 0.8rem; color: #fff; line-height: 1.5em;text-align:center;padding-bottom: 10px;
 }
 
-#user-alert, #age-alert, #exp-alert{
+/* #user-alert, #age-alert, #exp-alert{	 */
+p.alert{
+	display: none;
+	font-size: 0.75rem;
 	color: rgb(250, 0, 50);
 	line-height: 10px;
 	text-shadow: 0 0 10px rgba(0,0,0,0.3); 
@@ -176,7 +179,7 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
  
  .hex:hover, .t_hex:hover{
 	 z-index: 1;
-	 stroke: rgb(0, 0, 0);     /*  TODO  Draw Over all other SVG Objects*/
+	 stroke: rgb(0, 0, 0);     
 	 stroke-width: 3px;
 	 opacity: 0.95;
 	 /*opacity:1;*/
@@ -280,24 +283,24 @@ h2.overlay-H2 {
 
   /****************Check Box For Age*****************/
 
-.ageContainer{
+#ageContainer{
 	margin:auto;
 	text-align: center;
 }
 
- .radio {
+#ageContainer .radio {
      display:inline-block;
 	 margin: 0.5rem;
 }
 
- .radio input[type="radio"] {
+#ageContainer .radio input[type="radio"] {
 	 position: absolute;
 	 display: inline-block;
 	 width: 1.4em;
 	 height: 1.4em;
 	 opacity: 0;
 }
- .radio input[type="radio"] + .radio-label:before {
+#ageContainer .radio input[type="radio"] + .radio-label:before {
 	 content: '';
 	 background: #f4f4f4;
 	 border-radius: 100%;
@@ -313,23 +316,23 @@ h2.overlay-H2 {
 	 text-align: center;
 	 transition: all 250ms ease;
 }
- .radio input[type="radio"]:checked + .radio-label:before {
+#ageContainer .radio input[type="radio"]:checked + .radio-label:before {
 	 background-color: #3197ee;
 	 box-shadow: inset 0 0 0 4px #f4f4f4;
 }
- .radio input[type="radio"]:focus + .radio-label:before {
+#ageContainer .radio input[type="radio"]:focus + .radio-label:before {
 	 outline: none;
 	 border-color: #3197ee;
 }
- .radio input[type="radio"]:disabled + .radio-label:before {
+#ageContainer .radio input[type="radio"]:disabled + .radio-label:before {
 	 box-shadow: inset 0 0 0 4px #f4f4f4;
 	 border-color: #b4b4b4;
 	 background: #b4b4b4;
 }
- .radio input[type="radio"] + .radio-label:empty:before {
+#ageContainer .radio input[type="radio"] + .radio-label:empty:before {
 	 margin-right: 0;
 }
- .radio-label{
+#ageContainer .radio-label{
 	color: #fff; 
 	text-shadow: 0 0 10px rgba(0,0,0,0.3); 
 	letter-spacing:1px;
@@ -340,7 +343,7 @@ h2.overlay-H2 {
 
 /*****************************Star Rating***********************/
 fieldset, label { margin: 0; padding:0; }
-#starRating{
+#starRatingStart{
 	position: relative;
 	margin: auto;
 	text-align: center;
@@ -348,6 +351,7 @@ fieldset, label { margin: 0; padding:0; }
 	height: 100%;
 	padding-bottom: 10px;
 }
+
 /****** Style Star Rating Widget *****/
 
 .rating { 

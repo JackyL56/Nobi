@@ -21,7 +21,9 @@
     <div id="startPage" class="start">
       
       <div class="form">
-        <h2>Welcome to the deduction Puzzle Nobi</h2>
+        <h2>Welcome to the Nobi Puzzle Design Experiment</h2>
+        <p>Nobi is a simple deduction puzzle. <br>
+          You'll be asked to solve a number of Nobi challenges to help science.</p>
         <form>
 
 
@@ -32,7 +34,7 @@
             </div>
             
             <h3>Are you an Adult? (>18)</h3>
-            <div class="ageContainer">
+            <div id="ageContainer" class="ageContainer">
               <div class="radio">
                 <input id="radio-yes" name="radio" type="radio" value="1">
                 <label for="radio-yes" class="radio-label">Yes</label>
@@ -47,7 +49,7 @@
             </div>
       
             <h3>How much Experience do you have with Puzzles? (Beginner to Expert)</h3>
-            <div id="starRating">
+            <div id="starRatingStart">
               <fieldset class="rating">
                 <input type="radio" id="star5" name="rating" value="5" /><label class = "full" for="star5" title="Expert III - 5 stars"></label>
                 <input type="radio" id="star4half" name="rating" value="4.5" /><label class="half" for="star4half" title="Expert II - 4.5 stars"></label>
@@ -65,13 +67,11 @@
 
             <div id="information">
               <h3>Disclosure before starting:</h3>
-              <p>We will store your timings, but these will be kept confidential.</p>
+              <p class="disclosure">We will store your timings, but these will be kept confidential.</p>
               <!-- <p>You will first go through a short tutorial on the rules of the puzzle.</p> -->
-              <p>Currently, the game is not supported on mobile phones. </p>
-              <p>Do not resize your browser after pressing start for the best experience!</p>
-              <p>This web application uses Javascript. Make sure to enable it if the Start button does not work.</p>
-              <p>The progress on your current Puzzle won't be saved. If you decide to quit and come back another time, 
-                you can prevent getting your previous Puzzles by entering the <b><em>exact same</em></b> information on this page. (Tip: Make your Username is as unique as possible)
+              <p class="disclosure">Do not resize your browser after pressing start for the best experience!</p>
+              <p class="disclosure">This web application uses Javascript. Make sure to enable it if the Start button does not work.</p>
+              <p class="disclosure">If you decide to quit and come back another time, enter the <b><em>exact same</em></b> information on this page. (Tip: Make your Username is as unique as possible)
               </p>
             </div>
             <button type="button" id="btnStart" class="btn btn-primary btn-block btn-large">Start</button>  
@@ -88,14 +88,21 @@
         <div>
           <p class="rule shift-right">&#x2460 Three cells of the same colour never meet</p>
           <img src="./images/Rule 1.png" alt="No Triplet Rule" id="rule-1" class="rule-png">  
-          <p class="rule shift-right">&#x2461 Each colour form a single connected group</p>
+          <p class="rule shift-right">&#x2461 Each colour forms a single connected group</p>
           <img src="./images/Rule 2.png" alt="Single Connected Group" id="rule-2" class="rule-png">
+        </div>
+        <h2>&#x2B21 Types of cells:</h2>
+        <div>
+          Colourable Cells:
+          Fixed Cells:
         </div>
         <h2>&#x2B21 How to colour the cells:</h2>
         <div>
           <p class="shift-right">
+            &#x2B22 <i>Left-Click:</i> <br>
+            <span class="explanation shift-right">Fixed Cells: Select Colour</span> <br>
+            <span class="explanation shift-right">Colourable Cells: Colour using selected colour (If Rule &#x2460 is not violated)</span> <br>
             &#x2B22 <i>Right-Click:</i> <span class="explanation">Select the colour</span> <br>
-            &#x2B22 <i>Left-Click:</i> <span class="explanation">Colour using selected colour (If Rule &#x2460 is not violated)</span> <br>
             &#x2B22 <i>Double-Click:</i> <span class="explanation">Uncolour</span><br>
           </p>
         </div>
@@ -179,6 +186,41 @@
           <div id="pop-content" class="pop-content">
             <p>You have succesfully solved this puzzle.</p>
           </div>
+
+          <h3>How would you rate this puzzle?</h3>
+            <h4>Difficulty: </h4>
+            <div id="starRatingDifficulty">
+            <fieldset class="rating">
+              <input type="radio" id="dstar5" name="drating" value="5" /><label class = "full" for="dstar5" title="Expert III - 5 stars"></label>
+              <input type="radio" id="dstar4half" name="drating" value="4.5" /><label class="half" for="dstar4half" title="Expert II - 4.5 stars"></label>
+              <input type="radio" id="dstar4" name="drating" value="4" /><label class = "full" for="dstar4" title="Expert I - 4 stars"></label>
+              <input type="radio" id="dstar3half" name="drating" value="3.5" /><label class="half" for="dstar3half" title="Intermediate III - 3.5 stars"></label>
+              <input type="radio" id="dstar3" name="drating" value="3" /><label class = "full" for="dstar3" title="Intermediate II - 3 stars"></label>
+              <input type="radio" id="dstar2half" name="drating" value="2.5" /><label class="half" for="dstar2half" title="Intermediate I - 2.5 stars"></label>
+              <input type="radio" id="dstar2" name="drating" value="2" /><label class = "full" for="dstar2" title="Beginner III- 2 stars"></label>
+              <input type="radio" id="dstar1half" name="drating" value="1.5" /><label class="half" for="dstar1half" title="Beginner II - 1.5 stars"></label>
+              <input type="radio" id="dstar1" name="drating" value="1" /><label class = "full" for="dstar1" title="Beginner I - 1 star"></label>
+              <input type="radio" id="dstarhalf" name="drating" value="0.5" /><label class="half" for="dstarhalf" title="None - 0.5 stars"></label>
+            </fieldset>
+            <p id="dif-alert" class="alert">*Please fill this out</p>
+          </div>
+          <h4>Interesting:</h4>
+          <div id="starRatingInteresting">
+            <fieldset class="rating">
+              <input type="radio" id="istar5" name="irating" value="5" /><label class = "full" for="istar5" title="Expert III - 5 stars"></label>
+              <input type="radio" id="istar4half" name="irating" value="4.5" /><label class="half" for="istar4half" title="Expert II - 4.5 stars"></label>
+              <input type="radio" id="istar4" name="irating" value="4" /><label class = "full" for="istar4" title="Expert I - 4 stars"></label>
+              <input type="radio" id="istar3half" name="irating" value="3.5" /><label class="half" for="istar3half" title="Intermediate III - 3.5 stars"></label>
+              <input type="radio" id="istar3" name="irating" value="3" /><label class = "full" for="istar3" title="Intermediate II - 3 stars"></label>
+              <input type="radio" id="istar2half" name="irating" value="2.5" /><label class="half" for="istar2half" title="Intermediate I - 2.5 stars"></label>
+              <input type="radio" id="istar2" name="irating" value="2" /><label class = "full" for="istar2" title="Beginner III- 2 stars"></label>
+              <input type="radio" id="istar1half" name="irating" value="1.5" /><label class="half" for="istar1half" title="Beginner II - 1.5 stars"></label>
+              <input type="radio" id="istar1" name="irating" value="1" /><label class = "full" for="istar1" title="Beginner I - 1 star"></label>
+              <input type="radio" id="istarhalf" name="irating" value="0.5" /><label class="half" for="istarhalf" title="None - 0.5 stars"></label>
+            </fieldset>
+              <p id="int-alert" class="alert">*Please fill this out</p>
+            </div>
+
           <div id="pop-prompt" class="overlay-btn-prompt">
             <button type="button" id="btnNextSolved" class="btnNext btn btn-primary btn-large">Next Puzzle</button>
             <button type="button" id="btnEnd" class="btn btn-primary btn-large">End</button>
@@ -206,6 +248,18 @@
         </div>
         <div class="overlay-btn-prompt">
           <button type="button" id="btnFinished" class="btn btn-primary btn-large">Finished</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="tutOverlay" class="overlay">
+      <div id="tut-wrap" class="modal-wrap">
+        <h2 class="overlay-H2">Finished Colouring!</h2>
+        <div id="finished-content" class="modal-content">
+          <p>You will be notified once you have solved the puzzle!<br></p>
+        </div>
+        <div class="overlay-btn-prompt">
+          <button type="button" id="btnTutOkay" class="btn btn-primary btn-large">Okay</button>
         </div>
       </div>
     </div>

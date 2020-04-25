@@ -5,6 +5,8 @@ $(document).ready(() => {
     let puzzle_done = [] // Contains the id's of the puzzles already done by the user
     let game,grid;
 
+    // $('#solvedOverlay').show();
+
     /***** Function to get a random puzzle id in the range of puzzle_min and puzzle_max which is not already included in puzzle_done *****/
     let getRandomPuzzle = function(){
         if(puzzle_done.length-1 < (puzzle_max-puzzle_min) ){
@@ -26,7 +28,7 @@ $(document).ready(() => {
 
     /***********************StarRating **********************/
 
-    $('.rating_stars span.r').hover(function() {
+ /*    $('.rating_stars span.r').hover(function() {
         // get hovered value
         let rating = $(this).data('rating');
         let value = $(this).data('value');
@@ -47,6 +49,7 @@ $(document).ready(() => {
         $("#rating").val(rating);
         
         highlight_star(value);
+        
     });
     
     let highlight_star = function(rating) {
@@ -57,7 +60,7 @@ $(document).ready(() => {
             if (rating >= high) $(this).addClass('active-high');
             else if (rating == low) $(this).addClass('active-low');
         });
-    }
+    } */
 
     /*********************************************************/
 
@@ -83,7 +86,7 @@ $(document).ready(() => {
             }
             // Get the experience rating
             let experience=0;
-            let stars = $('.rating :input');
+            let stars = $('.rating :input[name="rating"]');
             for (const key in stars) {
                 if (stars.hasOwnProperty(key)) {
                     if(stars[key].checked){
@@ -92,9 +95,8 @@ $(document).ready(() => {
                 }
             }
 
-
             /***** Putting the information provided into the database *****/ 
-            let send = $.ajax({
+            $.ajax({
                 url: 'start',
                 type: 'POST',
                 data: {
@@ -127,11 +129,6 @@ $(document).ready(() => {
         $('.tutBoard').empty();
         $("#tutorialPage").hide();
         $('#gamePage').show()
-        // $('#gameCanvas').show()
-
-        
-        // currentPuzzle = getRandomPuzzle(puzzle_done);
-        // grid = game.drawBoard(currentPuzzle);
 
         $('#btnNextPuzzle').show();
         $('#btnReset').show();
@@ -143,15 +140,43 @@ $(document).ready(() => {
         if(this.id == 'btnNextPuzzle'){  // Skip Puzzle Button
             // Confirm 
             $('#nextConfirmOverlay').show();
-        } else { // Solved the Puzzle
+        } else { // Solved the Puzzle Pressed Play
+            // If solved the puzzle, log how the user rates the puzzle
+            if(this.id == 'btnNextSolved'){
+                // Check if both fields are filled in
+                if(ratingcheck()){
+                    let difficulty=0;
+                    let dstars = $('.rating :input[name="drating"]');
+                    for (const key in dstars) {
+                        if (dstars.hasOwnProperty(key)) {
+                            if(dstars[key].checked){
+                                difficulty = dstars[key].value
+                                dstars[key].checked = false;
+                            }
+                        }
+                    }
+                    
+                    let interesting=0;
+                    let istars = $('.rating :input[name="irating"]');
+                    for (const key in istars) {
+                        if (istars.hasOwnProperty(key)) {
+                            if(istars[key].checked){
+                                interesting = istars[key].value
+                                istars[key].checked = false;
+                            }
+                        }
+                    }
+                    logRating(userid,currentPuzzle,difficulty,interesting);
+                } else { return }
+            }
+
+            // Load the next puzzle
             $("#solvedOverlay").hide();
             $('#gameCanvas').empty();
             currentPuzzle = getRandomPuzzle(puzzle_done);
-            // game = new Nobi(userid,currentPuzzle);
             if(currentPuzzle){ // Checks if we have finished all the puzzles
                 grid = game.drawBoard(currentPuzzle)
-        
-            }
+            }            
         } 
     });
 
@@ -199,6 +224,10 @@ $(document).ready(() => {
         location.href = 'end.html'
     });
 
+    $('#btnTutOkay').click(function(){
+        $('#tutOverlay').hide();
+    });
+
     // Checks if the form is filled.
     function formcheck(){
         $('.alert').hide();
@@ -220,6 +249,37 @@ $(document).ready(() => {
 
         return filled;
     }
+
+    function ratingcheck(){
+        $('.alert').hide();
+        let filled = true;
+        if($('.rating').find('input[name="drating"]').serializeArray().length == 0){
+            // $('#ageAlert').show()
+            $('#dif-alert').slideDown();
+            filled = false;
+        }
+        if($('.rating').find('input[name="irating"]').serializeArray().length == 0){
+            // $('#ageAlert').show()
+            $('#int-alert').slideDown();
+            filled = false;
+        }
+        return filled;
+    }
+
+    // Log the user rating of puzzle
+    function logRating(uid,pid,d,i){
+        return $.ajax({
+            url: 'lograting',
+            type: 'POST',
+            data: {
+                uid: uid,
+                pid: pid,
+                dif: d,
+                int: i,
+            },
+        })
+    }
+
     /*************************************************************/
 
     

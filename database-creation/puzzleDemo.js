@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3');
 
 // Open an Sqlite database and provide detailed information if an error occured
-let db = new sqlite3.Database('./db/nobi.db', (err) => {
+let db = new sqlite3.Database(__dirname + '/../db/nobi.db', (err) => {
     if (err) {
       return console.error(err.message);
     }
@@ -136,9 +136,6 @@ db.serialize(() => {
     db.run("INSERT INTO puzzles_solution VALUES (2,2,-2,0,2)");
     db.run("INSERT INTO puzzles_solution VALUES (2,2,-1,-1,2)");
     db.run("INSERT INTO puzzles_solution VALUES (2,2,0,-2,4)");
-
-
-    console.log('successfully created the users_to_pets table in pets.db');
   
     // print them out to confirm their contents:
     db.each("SELECT puzzle_id, hex_q, hex_r, hex_s, hex_colour FROM puzzles", (err, row) => {

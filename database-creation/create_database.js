@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3');
 
 // Open an Sqlite database and provide detailed information if an error occured
-let db = new sqlite3.Database('./db/nobi.db', (err) => {
+let db = new sqlite3.Database(__dirname + '/../db/nobi.db', (err) => {
     if (err) {
       return console.error(err.message);
     }
@@ -50,7 +50,15 @@ db.run("CREATE TABLE user_moves (user_id INTEGER NOT NULL, puzzle_id INTEGER NOT
  *  move_count - int
  *  solved - int // 1 - solved || 0 - not solved
  */
-
+// Contains how the user rated the puzzle afteer solving it
+db.run("CREATE TABLE puzzle_rating (user_id INTEGER NOT NULL, puzzle_id INTEGER NOT NULL, difficulty INTEGER NOT NULL, interesting INTEGER NOT NULL)");
+/**
+ * Table: puzzle_rating
+ *  user_id - int
+ *  puzzle_id - int
+ *  difficulty - int
+ *  interesting - int
+ */
 
 // Closing the database connection after all pending queries are completed
 db.close((err) => {

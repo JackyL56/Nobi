@@ -58,8 +58,9 @@ class Nobi {
             const colour = grid.getHexColour(grid[index])
             this.hexes[index] = draw.polygon(corner.map(({ x, y }) => `${x+shiftValue},${y+shiftValue+shiftVertical}`))
             .fill(colour)   // Initial colour
-            .stroke({ width: 2, color: '#2D2D2D' })
+            .stroke({ width: 5, color: '#000' })
             .attr({"class":"hex",'cursor':'pointer','id':index})
+            
         });
         // Drawing the current Colour Box Indicator
         let pathData = this.roundedRectData(colourBox_size,0.6*colourBox_size,10,10,10,10); 
@@ -145,8 +146,8 @@ class Nobi {
         });
     
         function setCurrentColour(e){
+            console.log(e)
             e.preventDefault();
-            console.log(grid[e.target.id].colour)
             if(grid[e.target.id].colour != 0){
                 window.currentColour = grid[e.target.id].colour;  // Updating current selected colour
                 document.querySelector('#colourBox').setAttribute('style','fill:'.concat(grid.getColourByIndex(window.currentColour)));   // Filling the colour box with the current colour
@@ -154,24 +155,29 @@ class Nobi {
         }
 
         function changeColour(e){
-            if(window.currentColour != 0){  // Only start colouring, when a colour is selected (=> Not the 'uncoloured' state) 
-                currentHex = grid[e.target.id]; 
-                // If the colour of the currently selected Hexagon is not fixed and does not violate the Triplet rule, we colour it to the currently selected colour
-                if(currentHex.canBeColoured() && grid.noTriplets(currentHex,window.currentColour)){
-                    currentHex.colour = window.currentColour  // Modify colour to the current colour selected
-                    e.target.style.fill = grid.getHexColour(currentHex);   // Updating the colour
-                
-                // Logging the move 
-                    currentTime = e.timeStamp;
-                    time = currentTime - previousTime;
-                    previousTime = currentTime;
-                    moveNumber++;
-                    if(checkIfDone(grid,solution)){
-                        log(userid,puzzleid,currentHex.q,currentHex.r,currentHex.s,currentHex.colour,moveNumber,time,1)   // Puzzle done => Logging solved puzzle
-                    } else {
-                        log(userid,puzzleid,currentHex.q,currentHex.r,currentHex.s,currentHex.colour,moveNumber,time,0) 
+            currentHex = grid[e.target.id]; 
+            // If the colour of the currently selected Hexagon is not fixed and does not violate the Triplet rule, we colour it to the currently selected colour
+            if(currentHex.canBeColoured()){
+                if(window.currentColour != 0){  // Only start colouring, when a colour is selected (=> Not the 'uncoloured' state) 
+                    if(grid.noTriplets(currentHex,window.currentColour)){
+                        currentHex.colour = window.currentColour  // Modify colour to the current colour selected
+                        e.target.style.fill = grid.getHexColour(currentHex);   // Updating the colour
+                    
+                    // Logging the move 
+                        currentTime = e.timeStamp;
+                        time = currentTime - previousTime;
+                        previousTime = currentTime;
+                        moveNumber++;
+                        if(checkIfDone(grid,solution)){
+                            log(userid,puzzleid,currentHex.q,currentHex.r,currentHex.s,currentHex.colour,moveNumber,time,1)   // Puzzle done => Logging solved puzzle
+                        } else {
+                            log(userid,puzzleid,currentHex.q,currentHex.r,currentHex.s,currentHex.colour,moveNumber,time,0) 
+                        }
                     }
                 }
+            } else {
+                // Current Hexagon has a fixed colour. Select fixed colour as current colour.
+                setCurrentColour(e);
             }
         };
 
@@ -402,7 +408,7 @@ class Nobi {
             const colour = board.getHexColour(board[index])
             this.hexes[index] = drawTut1.polygon(corner.map(({ x, y }) => `${x+shiftValue},${y+shiftValue+shiftVertical}`))
             .fill(colour)   // Initial colour
-            .stroke({ width: 3, color: '#2D2D2D' })
+            .stroke({ width: 5, color: '#000' })
             .attr({"class":"t_hex",'cursor':'pointer','id':'t_'+index})
             .data('id',index);
         });
@@ -447,14 +453,20 @@ class Nobi {
         }
 
         function t_changeColour(e){
-            if(t_currentColour != 0){  // Only start colouring, when a colour is selected (=> Not the 'uncoloured' state) 
-                currentHex = board[e.target.dataset.id]; 
-                // If the colour of the currently selected Hexagon is not fixed and does not violate the Triplet rule, we colour it to the currently selected colour
-                if(currentHex.canBeColoured() && board.noTriplets(currentHex,t_currentColour)){
-                    currentHex.colour = t_currentColour  // Modify colour to the current colour selected
-                    e.target.style.fill = board.getHexColour(currentHex);   // Updating the colour
+            currentHex = board[e.target.dataset.id]; 
+            // If the colour of the currently selected Hexagon is not fixed and does not violate the Triplet rule, we colour it to the currently selected colour
+            if(currentHex.canBeColoured()){
+                if(t_currentColour != 0){  // Only start colouring, when a colour is selected (=> Not the 'uncoloured' state) 
+                    if(board.noTriplets(currentHex,t_currentColour)){
+                        currentHex.colour = t_currentColour  // Modify colour to the current colour selected
+                        e.target.style.fill = board.getHexColour(currentHex);   // Updating the colour
+                    }
                 }
+            } else {
+                // Selected a fixed coloured hexagon: Use the coolour as selected colour
+                t_setCurrentColour(e);    
             }
+            t_checkIfDone();
         };
 
         function t_resetColour(e){
@@ -466,6 +478,25 @@ class Nobi {
                     e.target.style.fill = board.getHexColour(currentHex);
                 }
             }
+        }
+
+        function t_checkIfDone(){
+            let done = true;
+            for (let index = 0; index < board.length; index++) {
+                if(board[index].colour == 0){
+                    done = false;
+                }   
+            }
+            if(done){
+                $('#tutOverlay').show();
+            }
+            return done; 
+            /* board.forEach(hex => {
+                if(hex.colour == 0){
+                    done = false;
+                }
+            });
+            return done; */
         }
 
         //*************************************** Drawing second Tutorial Board *********************************************************/
@@ -498,16 +529,16 @@ class Nobi {
             const colour = grid.getHexColour(grid[index])
             this.hexes[index] = draw.polygon(corner.map(({ x, y }) => `${x+shiftValue},${y+shiftValue+shiftVertical}`))
             .fill(colour)   // Initial colour
-            .stroke({ width: 3, color: '#2D2D2D' })
+            .stroke({ width: 5, color: '#000' })
             .attr({"class":"hex",'cursor':'pointer','id':index})
         });
         // Drawing the current Colour Box Indicator
+        let currentColour = 0;
         const colourBox = draw.path(pathData);
         colourBox.fill('#ffffff')
         .move(20, 20)
         .stroke({ color: '#000', width: 2, linecap: 'round', linejoin: 'round' })
         .attr({'class':'colourBox','id':'colourBox'});
-
 
 
             // TODO ADD EVENTLISTENERS IN USING A SEPARATE FUNCTION
@@ -517,17 +548,20 @@ class Nobi {
 function mouseMoveWhilstDown(target, whileMove) {
     // Function called, when we are done with with dragging
     let endMove = function () {
+        checkIfDone(grid,solution);
         window.removeEventListener('mouseover', whileMove);
         window.removeEventListener('mouseup', endMove);
     };
 
     target.addEventListener('mousedown', function (event) {
         event.stopPropagation(); 
-        dragPath = []; // Empty dragPath  // dragPath - two dimensional array: dragPath[x][0] - hex_id || dragPath[x][1] - hex_colour  ||  dragPath[x][2] - time between current and last move
-        dragPath.push([event.target.id,grid[event.target.id].colour]); // Push the source of the path     
-        window.currentDragColour = grid[event.target.id].colour;
-        window.addEventListener('mouseover', whileMove,);
-        window.addEventListener('mouseup', endMove);   
+        if(event.which === 1){
+            dragPath = []; // Empty dragPath  // dragPath - two dimensional array: dragPath[x][0] - hex_id || dragPath[x][1] - hex_colour  ||  dragPath[x][2] - time between current and last move
+            dragPath.push([event.target.id,grid[event.target.id].colour]); // Push the source of the path     
+            window.currentDragColour = grid[event.target.id].colour;
+            window.addEventListener('mouseover', whileMove,);
+            window.addEventListener('mouseup', endMove);   
+        }
     });
 }
       
@@ -536,7 +570,6 @@ function mouseMoveWhilstDown(target, whileMove) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Getting all hexagon svg elements
         let elements = Array.from(document.querySelectorAll('svg .hex'));
-        console.log(elements)
         // Adding EventListeners for each of them
         elements.forEach(function(el) {
             // EventListener for normal click and double-click
@@ -562,20 +595,26 @@ function mouseMoveWhilstDown(target, whileMove) {
         function setCurrentColour(e){
             e.preventDefault();
             if(grid[e.target.id].colour != 0){
-                window.currentColour = grid[e.target.id].colour;  // Updating current selected colour
-                document.querySelector('#colourBox').setAttribute('style','fill:'.concat(grid.getColourByIndex(window.currentColour)));   // Filling the colour box with the current colour
+                currentColour = grid[e.target.id].colour;  // Updating current selected colour
+                document.querySelector('#colourBox').setAttribute('style','fill:'.concat(grid.getColourByIndex(currentColour)));   // Filling the colour box with the current colour
             }
         }
 
         function changeColour(e){
-            if(window.currentColour != 0){  // Only start colouring, when a colour is selected (=> Not the 'uncoloured' state) 
-                currentHex = grid[e.target.id]; 
-                // If the colour of the currently selected Hexagon is not fixed and does not violate the Triplet rule, we colour it to the currently selected colour
-                if(currentHex.canBeColoured() && grid.noTriplets(currentHex,window.currentColour)){
-                    currentHex.colour = window.currentColour  // Modify colour to the current colour selected
-                    e.target.style.fill = grid.getHexColour(currentHex);   // Updating the colour
-                }
+            currentHex = grid[e.target.id]; 
+            // If the colour of the currently selected Hexagon is not fixed and does not violate the Triplet rule, we colour it to the currently selected colour
+            if(currentHex.canBeColoured()){
+                if(currentColour != 0){  // Only start colouring, when a colour is selected (=> Not the 'uncoloured' state) 
+                    if(grid.noTriplets(currentHex,currentColour)){
+                        currentHex.colour = currentColour  // Modify colour to the current colour selected
+                        e.target.style.fill = grid.getHexColour(currentHex);   // Updating the colour
+                    }
+                } 
+            } else {
+                // Selected a fixed coloured hexagon: Use the coolour as selected colour
+                setCurrentColour(e);
             }
+            checkIfDone(grid,solution);
         };
 
         function dragColour(e){
@@ -706,10 +745,9 @@ function mouseMoveWhilstDown(target, whileMove) {
             }
             // Current State is the same as the solution:
             // Show the Solved Pop Up Box
-            $("#solved-dialog").css('visibility', 'visible');
+            $("#tutOverlay").show();
             return true;
         }
-
         return grid;
     }
 
