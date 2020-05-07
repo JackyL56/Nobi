@@ -94,13 +94,25 @@ body {
 
 
 #rule-1{
-	width: 8.5em;
+	width: 13em;
 	display: block;
 	margin: auto;
 }
 
 #rule-2{
-	width: 20em;
+	width: 33em;
+	display: block;
+	margin: auto;
+}
+
+#pngFixed{
+	width: 17em;
+	display: block;
+	margin: auto;
+}
+
+#pngColourable{
+	width: 12em;
 	display: block;
 	margin: auto;
 }

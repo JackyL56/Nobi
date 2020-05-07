@@ -10,6 +10,26 @@ var lineReader = require('readline').createInterface({
   
 lineReader.on('line', function (line) {
     console.log('Line from file:', line);
+    
+    
+    let startRow = false;
+    for (let i = 0; i < line.length; i++) {
+        
+        
+        
+        if(line.charAt(i) == '"'){
+            if(startRow){
+                startRow = !startRow;
+                console.log("End of Row")
+            } else {
+                startRow = !startRow;
+                console.log("Start of Row")
+            }
+        }
+        // console.log(line.charAt(i));
+
+    }
+
 });
 
 /* 
