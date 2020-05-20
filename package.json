@@ -4,20 +4,19 @@
   "description": "This app includes the deduction puzzle game Nobi.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app"
+    "start": "babel-node app.js"
   },
   "author": "Jacky Liu",
   "license": "MIT",
   "dependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.6",
     "@svgdotjs/svg.js": "^3.0.16",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
-    "highland": "^2.13.5",
     "sqlite3": "^4.1.1"
   },
-  "devDependencies": {
-    "@babel/core": "^7.9.6",
-    "@babel/register": "^7.9.0"
-  }
+  "devDependencies": {}
 }
