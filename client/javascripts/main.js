@@ -6,6 +6,7 @@ $(document).ready(() => {
     let puzzle_min = 3, puzzle_max = 1102; // max - Puzzle id of the last puzzle in the database
     let puzzle_done = [] // Contains the id's of the puzzles already done by the user
     let game,grid;
+    let endGame = false; // To keep track of which end button was pressed
 
     // $('#solvedOverlay').show();
 
@@ -164,19 +165,57 @@ $(document).ready(() => {
      });
 
      // End Button
-     $('#btnEnd').click(function(){
-         $('#end-confirm').show();
+     $('.btnEnd').click(function(){
+        // If end button after solving the puzzle
+        if(this.id == 'btnEnd'){
+            // Check if both fields are filled in
+            if(ratingcheck()){
+                endGame = true;
+                $('#endOverlay').show();
+                $('#end-confirm').show();
+            } else { return }
+        } else {
+            $('#endOverlay').show();
+            $('#end-confirm').show();
+        }
      });
 
      // Confirm End button
-     $('#btnEndYes').click(function(){
-        $('#gameCanvas').empty();
-        location.href = 'end.html'
-     });
+    $('#btnEndYes').click(function(){
+        // Log Puzzle Rating of final Puzzle
+        if(endGame){
+            let difficulty=0;
+            let dstars = $('.rating :input[name="drating"]');
+            for (const key in dstars) {
+                if (dstars.hasOwnProperty(key)) {
+                    if(dstars[key].checked){
+                        difficulty = dstars[key].value
+                        dstars[key].checked = false;
+                    }
+                }
+            }
+            
+            let interesting=0;
+            let istars = $('.rating :input[name="irating"]');
+            for (const key in istars) {
+                if (istars.hasOwnProperty(key)) {
+                    if(istars[key].checked){
+                        interesting = istars[key].value
+                        istars[key].checked = false;
+                    }
+                }
+            }
+            logRating(userid,currentPuzzle,difficulty,interesting);
+        } else {
+            $('#gameCanvas').empty();
+            location.href = 'end.html';
+        }
+    });
 
      // Cancel End Button
      $('#btnEndNo').click(function(){
-        $('#end-confirm').hide();
+         endGame = false;
+        $('#endOverlay').hide();
     });
 
     $('#btnNextYes').click(function(){
@@ -250,6 +289,11 @@ $(document).ready(() => {
                 dif: d,
                 int: i,
             },
+        }).done(function(data){
+            if(endGame){
+                $('#gameCanvas').empty();
+                location.href = 'end.html'
+            }
         })
     }
 

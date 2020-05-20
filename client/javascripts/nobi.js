@@ -348,6 +348,24 @@ class Nobi {
                 } 
             }
             // Current State is the same as the solution:
+           
+            // Reset Stars
+            let dstars = $('.rating :input[name="drating"]');
+            for (const key in dstars) {
+                if (dstars.hasOwnProperty(key)) {
+                    if(dstars[key].checked){
+                        dstars[key].checked = false;
+                    }
+                }
+            }
+            let istars = $('.rating :input[name="irating"]');
+            for (const key in istars) {
+                if (istars.hasOwnProperty(key)) {
+                    if(istars[key].checked){
+                        istars[key].checked = false;
+                    }
+                }
+            }
             // Show the Solved Pop Up Box
             $("#solvedOverlay").show();
             return true;

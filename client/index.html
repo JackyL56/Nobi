@@ -175,6 +175,7 @@
         <div class="btn-prompt">
           <button type="button" id="btnReset" class="btn-Game btnReset">Reset</button>
           <button type="button" id="btnNextPuzzle" class="btnNext btn-Game">Skip</button>
+          <button type="button" id="btnEndPuzzle" class="btnEnd btn-Game">End</button>
         </div>
       </div>
     </div>
@@ -234,22 +235,25 @@
 
           <div id="pop-prompt" class="overlay-btn-prompt">
             <button type="button" id="btnNextSolved" class="btnNext btn btn-primary btn-large">Next Puzzle</button>
-            <button type="button" id="btnEnd" class="btn btn-primary btn-large">End</button>
-          </div>
-        </div>
-
-        <div id="end-confirm" class="overlay hidden">
-          <div class="modal-wrap confirm">
-            <div class="modal-content">
-              <p>Do you confirm you want to stop?</p>
-            </div>
-            <div class="overlay-btn-prompt">
-              <button type="button" id="btnEndYes" class="btn btn-primary btn-large">Confirm</button>
-              <button type="button" id="btnEndNo" class="btn btn-primary btn-large">Back</button>
-            </div>
+            <button type="button" id="btnEnd" class="btn btn-primary btn-large btnEnd">End</button>
           </div>
         </div>
     </div>
+
+    <div id="endOverlay" class="overlay"> 
+      <div id="end-confirm" class="overlay hidden">
+        <div class="modal-wrap confirm">
+          <div class="modal-content">
+            <p>Do you confirm you want to stop?</p>
+          </div>
+          <div class="overlay-btn-prompt">
+            <button type="button" id="btnEndYes" class="btn btn-primary btn-large">Confirm</button>
+            <button type="button" id="btnEndNo" class="btn btn-primary btn-large">Back</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
     <div id="finishedOverlay" class="overlay">
       <div id="finished-wrap" class="modal-wrap">
