@@ -1,3 +1,8 @@
+"use strict";
+
 function Point(x, y) {
-    return {x: x, y: y};
+  return {
+    x: x,
+    y: y
+  };
 }
