@@ -4,26 +4,29 @@ class Nobi {
     constructor(userid){   // Size has to be 1 or higher  -> TODO implement check
         // this.puzzleid = puzzleid;
         this.userid = userid;
-        this.hexes = new Array();  // Array containing the svg elements
+        // this.hexes = new Array();  // Array containing the svg elements
     }
 
 
     /***** Get hexagonal board of the given puzzle id *****/
     drawBoard = function(puzzleid){
         let userid = this.userid;
-        console.log("USER : " + userid + " ON PUZZLE: " + puzzleid)
+        // console.log("USER : " + userid + " ON PUZZLE: " + puzzleid)
 
         /*****  Variables to set the size of the canvas, board and hexagons *****/
-        let shiftValue = 0, shiftVertical = -window.innerHeight*0.1,width = window.innerWidth,height = 0;  // Shift Vertical to shift it to the center of the game canvas
+        let width = window.innerWidth,height = 0;  // Shift Vertical to shift it to the center of the game canvas
         let h = window.innerHeight, hex_size = 0.05*h, colourBox_size = 0.15*h;// let padding = 25;
-        let pointy = Layout(layout_pointy, Point(hex_size,hex_size), Point(window.innerWidth/2,window.innerHeight/2));  // Determines the layout of the hexagons. (Pointy layout here)
-        
-        /***** Variables used for colouring *****/
+        let marker = 0.2*hex_size; // Size of the little dot to mark a hint (fixed coloured hexes)
+        let layout = Layout(layout_flat, Point(hex_size,hex_size), Point(window.innerWidth/2,window.innerHeight/2));  // Determines the layout of the hexagons. (Pointy layout here)
+        // let layout = Layout(layout_pointy, Point(hex_size,hex_size), Point(window.innerWidth/2,window.innerHeight/2));  // Determines the layout of the hexagons. (Pointy layout here)
+
+        /***** Variables used to colour and draw the board *****/
         let dragPath = []; // Used to keep track of the path when drag-colouring  || dragPath[x][0] contains the id of the hexagon x in the grid || dragPath[x][1] contains the colour we drew over || dragPath[x][2] - time between current and last move
         let currentHex = [], previousHex = [], backtrack = []; // Used for rule-checking when drag-colouring 
         let clickCount = 0; let singleClickTimer; // Used to detect double-clicks
         window.currentColour = 0; // Initializing currently selected color
         
+        // let hexes = new Array();
         /***** Variables used to log the time*****/
         let time,currentTime, previousTime = 0, moveNumber = 0;  /// Used to calculate the time needed between each move
         
@@ -42,9 +45,10 @@ class Nobi {
         // Drawing the Hexagon SVGs
         for (let index = 0; index < grid.length; index++) {
             if(grid[index].canBeColoured()){
-                const corner = polygon_corners(pointy,grid[index])
+                const corner = polygon_corners(layout,grid[index])
                 const colour = grid.getHexColour(grid[index])
-                this.hexes[index] = draw.polygon(corner.map(({ x, y }) => `${x+shiftValue},${y+shiftValue+shiftVertical}`)) 
+                // hexes[index] = 
+                draw.polygon(corner.map(({ x, y }) => `${x},${y}`)) //+shiftValue+shiftVertical
                 .fill(colour)   // Initial colour
                 .stroke({ width: 2, color: '#999' })
                 .attr({"class":"hex",'cursor':'pointer','id':index})
@@ -52,16 +56,24 @@ class Nobi {
                 drawlast.push(index)
             }
         }
-        // Drawing the fixed coloured hexagons last, to highlight them with a darker border
+        // Drawing hints last, to highlight them with a darker border
         drawlast.forEach(index => {
-            const corner = polygon_corners(pointy,grid[index])
+            const corner = polygon_corners(layout,grid[index])
             const colour = grid.getHexColour(grid[index])
-            this.hexes[index] = draw.polygon(corner.map(({ x, y }) => `${x+shiftValue},${y+shiftValue+shiftVertical}`))
+            // hexes[index] = 
+            draw.polygon(corner.map(({ x, y }) => `${x},${y}`)) 
             .fill(colour)   // Initial colour
-            .stroke({ width: 5, color: '#000' })
+            .stroke({ width: 3, color: '#000' })
             .attr({"class":"hex",'cursor':'pointer','id':index})
-            
         });
+
+        // Marking the Hints
+        drawlast.forEach(index => {
+            const center = hex_to_pixel(layout,grid[index]);
+            draw.circle(marker).fill('#000').move(center.x-marker/2 , center.y-marker/2) 
+            .attr({'pointer-events':'none'})
+        });
+
         // Drawing the current Colour Box Indicator
         let pathData = this.roundedRectData(colourBox_size,0.6*colourBox_size,10,10,10,10); 
             const colourBox = draw.path(pathData);
@@ -146,7 +158,6 @@ class Nobi {
         });
     
         function setCurrentColour(e){
-            console.log(e)
             e.preventDefault();
             if(grid[e.target.id].colour != 0){
                 window.currentColour = grid[e.target.id].colour;  // Updating current selected colour
@@ -173,6 +184,9 @@ class Nobi {
                         } else {
                             log(userid,puzzleid,currentHex.q,currentHex.r,currentHex.s,currentHex.colour,moveNumber,time,0) 
                         }
+                    } else {
+                        // Show Warning
+                        tripletWarning(e);
                     }
                 }
             } else {
@@ -299,7 +313,7 @@ class Nobi {
         function setViewingVariables(){
             let min=0, max_x=0, max_y=0;
             for (let index = 0; index < grid.length; index++) {
-                const corner = polygon_corners(pointy,grid[index]);
+                const corner = polygon_corners(layout,grid[index]);
                 corner.forEach(c => {
                     if(c.x > max_x){
                         max_x = c.x;
@@ -316,21 +330,22 @@ class Nobi {
                 });
             }
             // Shift amount is the most negative coordinate of all the hexagons
-            shiftValue = -min;           
+            // shiftValue = -min;           
             // Set width and height of the canvas to fit all the hexagons 
-            if(width < max_x+shiftValue){
-                width = max_x+shiftValue;    
+            if(width < max_x){
+                width = max_x;    
             } 
-            height = max_y+shiftValue;
+            height = max_y+30; // 30 - extra margin
         }
 
     /***** Function to check, if the current state of the puzzle corresponds to the solution *****/    
         function checkIfDone(grid,solution){
             // Comparing each Hexagons colour
-            for (let i = 0; i < grid.length; i++) {
-                if(grid[i].colour != solution[i].colour){
+            
+            for (let i = 0; i < solution.length; i++) {
+                if(solution[i].colour != grid.getHex(solution[i].q,solution[i].r).colour){
                     return false;
-                }
+                } 
             }
             // Current State is the same as the solution:
             // Show the Solved Pop Up Box
@@ -356,9 +371,18 @@ class Nobi {
                 },
             })
         }   
+    /***** Shows the rule-violation text at the position of the cursor and fades out ******/
+        function tripletWarning(e) {
+            let span = $('#rule-violation');
+            span.css({'left':e.clientX-40+'px','top':e.clientY-15+'px'});
+            span.stop(true).hide().fadeIn(); // Prevent the fadeIn's to queue up
+            span.fadeOut();
+        }
 
         return grid;
     }
+
+    
 
     /***** Get the tutorial *****/
     drawTutorial = function(){
@@ -366,13 +390,13 @@ class Nobi {
         let shiftValue = 0, shiftVertical = -window.innerHeight*0.22,width = window.innerWidth,height = 0;  // Shift Vertical to shift it to the center of the game canvas
         let h = window.innerHeight, hex_size = 0.05*h, colourBox_size = 0.15*h; let padding = 25;
         let pointy = Layout(layout_pointy, Point(hex_size,hex_size), Point(window.innerWidth/2,window.innerHeight/2));
-
-
+        let marker = 0.2*hex_size;
         /***** Variables used for colouring *****/
         let dragPath = []; // Used to keep track of the path when drag-colouring  || dragPath[x][0] contains the id of the hexagon x in the grid || dragPath[x][1] contains the colour we drew over || dragPath[x][2] - time between current and last move
         let currentHex = [], previousHex = [], backtrack = []; // Used for rule-checking when drag-colouring 
         let clickCount = 0; let singleClickTimer; // Used to detect double-clicks
         window.currentColour = 0; // Initializing currently selected color
+        // let hexes = new Array();
 
         //*************************************** Drawing first Tutorial Board *********************************************************/
 
@@ -393,7 +417,8 @@ class Nobi {
             if(board[index].canBeColoured()){
                 const corner = polygon_corners(pointy,board[index])
                 const colour = board.getHexColour(board[index])
-                this.hexes[index] = drawTut1.polygon(corner.map(({ x, y }) => `${x+shiftValue},${y+shiftValue+shiftVertical}`)) 
+                // hexes[index] = 
+                drawTut1.polygon(corner.map(({ x, y }) => `${x+shiftValue},${y+shiftValue+shiftVertical}`)) 
                 .fill(colour)   // Initial colour
                 .stroke({ width: 2, color: '#999' })
                 .attr({"class":"t_hex",'cursor':'pointer','id':'t_'+index})
@@ -402,15 +427,22 @@ class Nobi {
                 drawlast.push(index)
             }
         }
-        // Drawing the fixed coloured hexagons last, to highlight them with a darker border
+        // Drawing hints last, to highlight them with a darker border
         drawlast.forEach(index => {
             const corner = polygon_corners(pointy,board[index])
             const colour = board.getHexColour(board[index])
-            this.hexes[index] = drawTut1.polygon(corner.map(({ x, y }) => `${x+shiftValue},${y+shiftValue+shiftVertical}`))
+            // hexes[index] = 
+            drawTut1.polygon(corner.map(({ x, y }) => `${x+shiftValue},${y+shiftValue+shiftVertical}`))
             .fill(colour)   // Initial colour
-            .stroke({ width: 5, color: '#000' })
+            .stroke({ width: 3, color: '#000' })
             .attr({"class":"t_hex",'cursor':'pointer','id':'t_'+index})
             .data('id',index);
+        });
+        // Marking the Hints
+        drawlast.forEach(index => {
+            const center = hex_to_pixel(pointy,board[index]);
+            drawTut1.circle(marker).fill('#000').move(center.x-marker/2 , center.y+shiftValue+shiftVertical-marker/2 )
+            .attr({'pointer-events':'none'})
         });
         // Drawing the current Colour Box Indicator
         let t_currentColour = 0;
@@ -460,6 +492,8 @@ class Nobi {
                     if(board.noTriplets(currentHex,t_currentColour)){
                         currentHex.colour = t_currentColour  // Modify colour to the current colour selected
                         e.target.style.fill = board.getHexColour(currentHex);   // Updating the colour
+                    } else {
+                        tripletWarning(e); // Warn user of the Triplet Rule
                     }
                 }
             } else {
@@ -515,7 +549,8 @@ class Nobi {
             if(grid[index].canBeColoured()){
                 const corner = polygon_corners(pointy,grid[index])
                 const colour = grid.getHexColour(grid[index])
-                this.hexes[index] = draw.polygon(corner.map(({ x, y }) => `${x+shiftValue},${y+shiftValue+shiftVertical}`)) 
+                // hexes[index] = 
+                draw.polygon(corner.map(({ x, y }) => `${x+shiftValue},${y+shiftValue+shiftVertical}`)) 
                 .fill(colour)   // Initial colour
                 .stroke({ width: 2, color: '#999' })
                 .attr({"class":"hex",'cursor':'pointer','id':index})
@@ -523,15 +558,23 @@ class Nobi {
                 drawlast.push(index)
             }
         }
-        // Drawing the fixed coloured hexagons last, to highlight them with a darker border
+        // Drawing hints last, to highlight them with a darker border
         drawlast.forEach(index => {
             const corner = polygon_corners(pointy,grid[index])
             const colour = grid.getHexColour(grid[index])
-            this.hexes[index] = draw.polygon(corner.map(({ x, y }) => `${x+shiftValue},${y+shiftValue+shiftVertical}`))
+            // hexes[index] = 
+            draw.polygon(corner.map(({ x, y }) => `${x+shiftValue},${y+shiftValue+shiftVertical}`))
             .fill(colour)   // Initial colour
-            .stroke({ width: 5, color: '#000' })
+            .stroke({ width: 3, color: '#000' })
             .attr({"class":"hex",'cursor':'pointer','id':index})
         });
+        // Marking the Hints
+        drawlast.forEach(index => {
+            const center = hex_to_pixel(pointy,grid[index]);
+            draw.circle(marker).fill('#000').move(center.x-marker/2 , center.y+shiftValue+shiftVertical-marker/2 )
+            .attr({'pointer-events':'none'})
+        });
+
         // Drawing the current Colour Box Indicator
         let currentColour = 0;
         const colourBox = draw.path(pathData);
@@ -608,6 +651,8 @@ function mouseMoveWhilstDown(target, whileMove) {
                     if(grid.noTriplets(currentHex,currentColour)){
                         currentHex.colour = currentColour  // Modify colour to the current colour selected
                         e.target.style.fill = grid.getHexColour(currentHex);   // Updating the colour
+                    } else {
+                        tripletWarning(e);
                     }
                 } 
             } else {
@@ -748,6 +793,15 @@ function mouseMoveWhilstDown(target, whileMove) {
             $("#tutOverlay").show();
             return true;
         }
+
+        /***** Shows the rule-violation text at the position of the cursor and fades out ******/
+        function tripletWarning(e) {
+            let span = $('#rule-vio');
+            span.css({'left':e.clientX-40+'px','top':e.clientY-15+'px'});
+            span.stop(true).hide().fadeIn(); // Prevent the fadeIn's to queue up
+            span.fadeOut();
+        }
+
         return grid;
     }
 
@@ -789,7 +843,7 @@ function mouseMoveWhilstDown(target, whileMove) {
     }
 
     /***** Function to check, if the current state of the puzzle corresponds to the solution *****/    
-    checkIfDone = function(grid,solution){
+   /*  checkIfDone = function(grid,solution){
         // Comparing each Hexagons colour
         for (let i = 0; i < grid.length; i++) {
             if(grid[i].colour != solution[i].colour){
@@ -800,7 +854,7 @@ function mouseMoveWhilstDown(target, whileMove) {
         // Show the Solved Pop Up Box
         $("#solved-dialog").css('visibility', 'visible');
         return true;
-    }
+    } */
 
     /**
  * Get path data for a rounded rectangle. Allows for different radius on each corner.

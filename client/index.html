@@ -94,13 +94,13 @@
         <h2>&#x2B21 Types of cells:</h2>
         <div>
           <p class="shift-right">
-            &#8627 Fixed Colour Cells:<br>
-            <span class="explanation shift-right">Colour can not be changed.<br></span>
-            <span class="explanation shift-right">Have a black border around them.</span>
-            <img src="./images/Fixed Cells.png" alt="Fixed Cells" id="pngFixed">
+            &#8627 Hint Cells:<br>
+            <span class="explanation shift-right">&#x00B7 Colour can not be changed.<br></span>
+            <span class="explanation shift-right">&#x00B7 Have a slight black border around them and a black dot in the middle.</span>
+            <img src="./images/Hint Cells.png" alt="Hint Cells" id="pngFixed">
             <br>&#8627 Colourable Cells:<br>
-            <span class="explanation shift-right">Colour can be changed.<br></span>
-            <span class="explanation shift-right">Do not have a black border.<br></span>
+            <span class="explanation shift-right">&#x00B7 Colour can be changed.<br></span>
+            <span class="explanation shift-right">&#x00B7 Do not have a black border.<br></span>
             <img src="./images/Colourable Cells.png" alt="Colourable Cells" id="pngColourable">
           </p>
         </div>
@@ -108,8 +108,8 @@
         <div>
           <p class="shift-right">
             &#x2B22 <i>Left-Click:</i> <br>
-            <span class="explanation shift-right">Fixed Cells: Select Colour</span> <br>
-            <span class="explanation shift-right">Colourable Cells: Colour using selected colour (If Rule &#x2460 is not violated)</span> <br>
+            <span class="explanation shift-right">&#x00B7 Fixed Cells: Select Colour</span> <br>
+            <span class="explanation shift-right">&#x00B7 Colourable Cells: Colour using selected colour (If Rule &#x2460 is not violated)</span> <br>
             &#x2B22 <i>Right-Click:</i> <span class="explanation">Select the colour</span> <br>
             &#x2B22 <i>Double-Click:</i> <span class="explanation">Uncolour</span><br>
           </p>
@@ -137,13 +137,13 @@
         <p class="shift-right shift-up-2">
           At the bottom of the Puzzle, there are two buttons: <br>
           <span class="shift-right">&#8627 Reset Button: <span class="explanation">Reset the Puzzle</span>  <br> </span>
-          <span class="shift-right">&#8627 Next Button: <span class="explanation">Move on to the next Puzzle</span>  </span>
+          <span class="shift-right">&#8627 Skip Button: <span class="explanation">Move on to the next Puzzle</span>  </span>
           
         </p>
 
         <div class="btn-prompt">
           <button type="button" class="btn-Game btnReset">Reset</button>
-          <button type="button" class="btn-Game">Next</button>
+          <button type="button" class="btn-Game">Skip</button>
         </div>
 
       </div>
@@ -151,9 +151,10 @@
       <div class="tutText">
         <h2>&#x2B21 Notes:</h2>
         <p class="shift-right">
-          &#8618 Black Border on a hexagon: The colour is fixed. <br>
+          &#8618 Each Puzzle has a unique solution! <br>
           &#8618 The game automatically checks for the Triplet rule (Rule &#x2460) before colouring. <br>
-          &#8618 It is not possible to select white as your current colour, since it represents the 'uncoloured' state and is technically not a colour. Use Double-Click instead!
+          &#8618 It is not possible to select white as your current colour, since it represents the 'uncoloured' state and is technically not a colour. Use Double-Click instead!<br>
+          &#8618 If you have succesfully coloured the whole board, but no Solved pop-up appeared, check if each colour is <b>connected</b>!
         </p>
       </div>
       
@@ -163,15 +164,17 @@
           <button type="button" id="btnPlay" class="btn-Game btnNext">Play</button> 
         </div> 
       </div>
-
+      <span id="rule-vio" class="warning">Rule Violation!</span>
     </div>
 
     <div id="gamePage">
+      <!-- <h3>Connect Each Colour!</p>  -->  <!-- Messes up mouse position for Warnings. (Overfills the page in the vertical position, so it is scrollable) To be Fixed -->
       <div id="center">
+        <span id="rule-violation" class="warning">Rule Violation!</span>
         <div id="gameCanvas"></div>
         <div class="btn-prompt">
           <button type="button" id="btnReset" class="btn-Game btnReset">Reset</button>
-          <button type="button" id="btnNextPuzzle" class="btnNext btn-Game">Next</button>
+          <button type="button" id="btnNextPuzzle" class="btnNext btn-Game">Skip</button>
         </div>
       </div>
     </div>

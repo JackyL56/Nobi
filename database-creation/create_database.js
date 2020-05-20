@@ -17,7 +17,15 @@ db.run("CREATE TABLE users (user_id INTEGER PRIMARY KEY NOT NULL, user_name TEXT
  *  adult - int // 0 - NO || 1 - YES  (>18)
  *  experience - int (1-5, where 1 - barely any and 5 - a lot)
  */
-db.run("CREATE TABLE puzzles (puzzle_id INTEGER NOT NULL, hex_q INTEGER NOT NULL, hex_r INTEGER NOT NULL, hex_s INTEGER NOT NULL, hex_colour INTEGER NOT NULL)");
+db.run("CREATE TABLE puzzles_info (puzzle_id INTEGER PRIMARY KEY NOT NULL, size TEXT, colours INTEGER, hints INTEGER)");
+/**
+ * Table: users
+ *  puzzle_id
+ *  size - size nxm of the puzzle 
+ *  colours - number of distinct colours
+ *  hints - number of hint cells given
+ */
+db.run("CREATE TABLE puzzles (puzzle_id INTEGER NOT NULL, hex_q INTEGER NOT NULL, hex_r INTEGER NOT NULL, hex_s INTEGER NOT NULL, hex_colour INTEGER NOT NULL,FOREIGN KEY (puzzle_id) REFERENCES puzzles_info (puzzle_id))");
 /**
  * Table: puzzles
  *  puzzle_id - int
@@ -26,7 +34,7 @@ db.run("CREATE TABLE puzzles (puzzle_id INTEGER NOT NULL, hex_q INTEGER NOT NULL
  *  hex_s - int
  *  hex_colour - integer
  */
-db.run("CREATE TABLE puzzles_solution (puzzle_id INTEGER NOT NULL, hex_q INTEGER NOT NULL, hex_r INTEGER NOT NULL, hex_s INTEGER NOT NULL, hex_colour INTEGER NOT NULL)");
+db.run("CREATE TABLE puzzles_solution (puzzle_id INTEGER NOT NULL, hex_q INTEGER NOT NULL, hex_r INTEGER NOT NULL, hex_s INTEGER NOT NULL, hex_colour INTEGER NOT NULL,FOREIGN KEY (puzzle_id) REFERENCES puzzles_info (puzzle_id))");
 /**
  * Table: puzzles_solution
  *  puzzle_id - int
@@ -38,7 +46,7 @@ db.run("CREATE TABLE puzzles_solution (puzzle_id INTEGER NOT NULL, hex_q INTEGER
 
 // uncomment when move_count and solved are implemented
 //db.run("CREATE TABLE user_moves (user_id INTEGER NOT NULL, puzzle_id INTEGER NOT NULL, hex_q INTEGER NOT NULL, hex_r INTEGER NOT NULL, hex_s INTEGER NOT NULL, hex_colour INTEGER NOT NULL, move_time INTEGER NOT NULL, solved INTEGER NOT NULL, FOREIGN KEY (user_id) REFERENCES users (user_id))");
-db.run("CREATE TABLE user_moves (user_id INTEGER NOT NULL, puzzle_id INTEGER NOT NULL, hex_q INTEGER NOT NULL, hex_r INTEGER NOT NULL, hex_s INTEGER NOT NULL, hex_colour INTEGER NOT NULL, move_number INTEGER ,move_time INTEGER, solved INTEGER, FOREIGN KEY (user_id) REFERENCES users (user_id))");
+db.run("CREATE TABLE user_moves (user_id INTEGER NOT NULL, puzzle_id INTEGER NOT NULL, hex_q INTEGER NOT NULL, hex_r INTEGER NOT NULL, hex_s INTEGER NOT NULL, hex_colour INTEGER NOT NULL, move_number INTEGER ,move_time INTEGER, solved INTEGER, FOREIGN KEY (user_id) REFERENCES users (user_id),FOREIGN KEY (puzzle_id) REFERENCES puzzles_info (puzzle_id))");
 /**
  * Table: puzzles
  *  user_id - int , foreign key linked to users (user_id)
@@ -51,7 +59,7 @@ db.run("CREATE TABLE user_moves (user_id INTEGER NOT NULL, puzzle_id INTEGER NOT
  *  solved - int // 1 - solved || 0 - not solved
  */
 // Contains how the user rated the puzzle afteer solving it
-db.run("CREATE TABLE puzzle_rating (user_id INTEGER NOT NULL, puzzle_id INTEGER NOT NULL, difficulty INTEGER NOT NULL, interesting INTEGER NOT NULL)");
+db.run("CREATE TABLE puzzle_rating (user_id INTEGER NOT NULL, puzzle_id INTEGER NOT NULL, difficulty INTEGER NOT NULL, interesting INTEGER NOT NULL, FOREIGN KEY (user_id) REFERENCES users (user_id), FOREIGN KEY (puzzle_id) REFERENCES puzzles_info (puzzle_id))");
 /**
  * Table: puzzle_rating
  *  user_id - int

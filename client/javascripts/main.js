@@ -1,7 +1,9 @@
 $(document).ready(() => {
     let userid = 0;
     let currentPuzzle;
-    let puzzle_min = 1, puzzle_max = 2; // max - Puzzle id of the last puzzle in the database
+    let sample_puzzle1 = 1; let sample_puzzle2 = 2; // Id's of the sample puzzles
+    let numberOfSamplePuzzles = 2;
+    let puzzle_min = 3, puzzle_max = 1102; // max - Puzzle id of the last puzzle in the database
     let puzzle_done = [] // Contains the id's of the puzzles already done by the user
     let game,grid;
 
@@ -9,13 +11,22 @@ $(document).ready(() => {
 
     /***** Function to get a random puzzle id in the range of puzzle_min and puzzle_max which is not already included in puzzle_done *****/
     let getRandomPuzzle = function(){
-        if(puzzle_done.length-1 < (puzzle_max-puzzle_min) ){
-            let random = getRandomNumber(puzzle_min,puzzle_max);
-            while(puzzle_done.includes(random)){
-                random = getRandomNumber(puzzle_min,puzzle_max);
+        // Check if there are still puzzles available
+        if(puzzle_done.length-1 < (puzzle_max-puzzle_min+numberOfSamplePuzzles) ){
+            if(!puzzle_done.includes(1)){
+                puzzle_done.push(1);
+                return sample_puzzle1;
+            } else if(!puzzle_done.includes(2)){
+                puzzle_done.push(2);
+                return sample_puzzle2;
+            } else {
+                let random = getRandomNumber(puzzle_min,puzzle_max);
+                while(puzzle_done.includes(random)){
+                    random = getRandomNumber(puzzle_min,puzzle_max);
+                }
+                puzzle_done.push(random);
+                return random;    
             }
-            puzzle_done.push(random);
-            return random;
         } else {  
             $('#finishedOverlay').show()
             return false;
@@ -25,44 +36,6 @@ $(document).ready(() => {
     let getRandomNumber = function(min,max){
         return Math.floor(Math.random()*(max-min+1)+min);
     };
-
-    /***********************StarRating **********************/
-
- /*    $('.rating_stars span.r').hover(function() {
-        // get hovered value
-        let rating = $(this).data('rating');
-        let value = $(this).data('value');
-        $(this).parent().attr('class', '').addClass('rating_stars').addClass('rating_'+rating);
-        highlight_star(value);
-    }, function() {
-        // get hidden field value
-        let rating = $("#rating").val();
-        let value = $("#rating_val").val();
-        $(this).parent().attr('class', '').addClass('rating_stars').addClass('rating_'+rating);
-        highlight_star(value);
-    }).click(function() {
-        // Set hidden field value
-        let value = $(this).data('value');
-        $("#rating_val").val(value);
-
-        let rating = $(this).data('rating');
-        $("#rating").val(rating);
-        
-        highlight_star(value);
-        
-    });
-    
-    let highlight_star = function(rating) {
-        $('.rating_stars span.s').each(function() {
-            var low = $(this).data('low');
-            var high = $(this).data('high');
-            $(this).removeClass('active-high').removeClass('active-low');
-            if (rating >= high) $(this).addClass('active-high');
-            else if (rating == low) $(this).addClass('active-low');
-        });
-    } */
-
-    /*********************************************************/
 
     /***************************  Adding Click Functions to buttons  ***************************/
     
@@ -106,7 +79,7 @@ $(document).ready(() => {
                 },
             }).done(function(response){ 
                 /*****  Returns an Object response, with user_id and done (array of puzzle id's the user already solved/attempted to solve) *****/                
-                console.log(response)
+                // console.log(response)
                 userid = response.user_id;
                 if(response.done){  // If the array of puzzles is not empty
                     puzzle_done = response.done;
