@@ -1,4 +1,5 @@
 //Main application file
+require("@babel/register");
 const express = require('express');
 const routes = require('./routes');
 

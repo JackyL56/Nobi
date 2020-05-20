@@ -1,4 +1,3 @@
-'use strict';
 $(document).ready(() => {
     let userid = 0;
     let currentPuzzle;
