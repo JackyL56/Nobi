@@ -1,12 +1,27 @@
 "use strict";
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
 
 class Grid extends Array {
   constructor(...args) {
     super(...args);
 
-    _defineProperty(this, "colourArray", ['#FFFFFF', '#0080FF', '#FF0000', '#00BF00', '#FFC90E', '#800080', '#00FFFF', '#800000', '#646464', '#C70039', '#FF00FF', '#FF5733', '#E6B3B3', '#6680B3', '#66991A', '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC', '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC', '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399', '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680', '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933', '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF']);
+    _defineProperty(this, "colourArray", ['#FFFFFF', '#0080FF', '#FF0000', '#00BF00', '#FFC90E', '#800080', '#00FFFF', '#800000', '#646464', '#C70039', '#FF00FF', '#FF5733', '#E6B3B3', '#6680B3', '#66991A', '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC', '#66994D']);
+
+    _defineProperty(this, "colourArrayDark", ['#FFFFFF', '#004DCC', '#CC0000', '#008C00', '#CC9600', '#4D004D', '#00CCCC', '#4D0000', '#313131', '#940006', '#CC00CC', '#CC2400', '#B38080', '#334D80', '#336600', '#CC66B3', '#99CC00', '#CC0033', '#B30000', '#00CC99', '#33661A']);
   }
 
   static isValidHex(value) {
@@ -41,6 +56,10 @@ class Grid extends Array {
 
   getHexColour(Hex) {
     return this.colourArray[Hex.colour];
+  }
+
+  getHintColour(Hex) {
+    return this.colourArrayDark[Hex.colour];
   }
 
   getColourByIndex(index) {

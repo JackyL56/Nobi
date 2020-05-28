@@ -1,11 +1,24 @@
 "use strict";
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
 
 class Nobi {
   constructor(_userid) {
     _defineProperty(this, "drawBoard", function (puzzleid) {
-      let userid = this.userid; // console.log("USER : " + userid + " ON PUZZLE: " + puzzleid)
+      let userid = this.userid; // console.log("USER : " + userid + " ON PUZZLE: " + puzzleid);
 
       /*****  Variables to set the size of the canvas, board and hexagons *****/
 
@@ -16,7 +29,7 @@ class Nobi {
           hex_size = 0.05 * h,
           colourBox_size = 0.15 * h; // let padding = 25;
 
-      let marker = 0.2 * hex_size; // Size of the little dot to mark a hint (fixed coloured hexes)
+      let marker = 0.5 * hex_size; // Size of the little dot to mark a hint (fixed coloured hexes)
 
       let layout = Layout(layout_flat, Point(hex_size, hex_size), Point(window.innerWidth / 2, window.innerHeight / 2)); // Determines the layout of the hexagons. (Pointy layout here)
       // let layout = Layout(layout_pointy, Point(hex_size,hex_size), Point(window.innerWidth/2,window.innerHeight/2));  // Determines the layout of the hexagons. (Pointy layout here)
@@ -24,6 +37,8 @@ class Nobi {
       /***** Variables used to colour and draw the board *****/
 
       let dragPath = []; // Used to keep track of the path when drag-colouring  || dragPath[x][0] contains the id of the hexagon x in the grid || dragPath[x][1] contains the colour we drew over || dragPath[x][2] - time between current and last move
+
+      let backPath = []; // Used to keep track of the moves made
 
       let currentHex = [],
           previousHex = [],
@@ -46,6 +61,7 @@ class Nobi {
       /***** Initializing the grid containing the hexagons and the respective solution grid for the puzzle*****/
 
       const grid = new Grid();
+      grid.backPath = backPath;
       this.setMap(grid, puzzleid);
       const solution = [];
       this.getSolution(solution, puzzleid);
@@ -99,7 +115,8 @@ class Nobi {
 
       drawlast.forEach(index => {
         const center = hex_to_pixel(layout, grid[index]);
-        draw.circle(marker).fill('#000').move(center.x - marker / 2, center.y - marker / 2).attr({
+        const colour = grid.getHintColour(grid[index]);
+        draw.circle(marker).fill(colour).move(center.x - marker / 2, center.y - marker / 2).attr({
           'pointer-events': 'none'
         });
       }); // Drawing the current Colour Box Indicator
@@ -122,16 +139,22 @@ class Nobi {
         // Function called, when we are done with with dragging
         let endMove = function endMove() {
           if (dragPath.length > 1) {
-            // Log data if we coloured using 'dragging'
+            let indexArray = [];
+            let colourArray = []; // Log data if we coloured using 'dragging'
+
             if (checkIfDone(grid, solution)) {
               // If the puzzle is done
               for (let index = 1; index < dragPath.length - 1; index++) {
-                // Starting at index 1, since we do not want to log the source of the dragpath 
+                indexArray.push(dragPath[index][0]);
+                colourArray.push(dragPath[index][1]); // Starting at index 1, since we do not want to log the source of the dragpath 
+
                 let hex = grid[dragPath[index][0]];
                 moveNumber++;
                 log(userid, puzzleid, hex.q, hex.r, hex.s, hex.colour, moveNumber, dragPath[index][2], 0);
-              } // Logging final move manually
+              }
 
+              indexArray.push(dragPath[dragPath.length - 1][0]);
+              colourArray.push(dragPath[dragPath.length - 1][1]); // Logging final move manually
 
               moveNumber++;
               let hex = grid[dragPath[dragPath.length - 1][0]];
@@ -139,11 +162,15 @@ class Nobi {
             } else {
               // Puzzle is not solved, simply log every move
               for (let index = 1; index < dragPath.length; index++) {
+                indexArray.push(dragPath[index][0]);
+                colourArray.push(dragPath[index][1]);
                 let hex = grid[dragPath[index][0]];
                 moveNumber++;
                 log(userid, puzzleid, hex.q, hex.r, hex.s, hex.colour, moveNumber, dragPath[index][2], 0);
               }
             }
+
+            backPath.push([indexArray, colourArray]);
           }
 
           window.removeEventListener('mouseover', whileMove);
@@ -216,6 +243,7 @@ class Nobi {
           if (window.currentColour != 0) {
             // Only start colouring, when a colour is selected (=> Not the 'uncoloured' state) 
             if (grid.noTriplets(currentHex, window.currentColour)) {
+              backPath.push([[e.target.id], [currentHex.colour]]);
               currentHex.colour = window.currentColour; // Modify colour to the current colour selected
 
               e.target.style.fill = grid.getHexColour(currentHex); // Updating the colour
@@ -341,6 +369,7 @@ class Nobi {
         if (currentHex.colour != 0) {
           // Reset the colour (set back to initial colour 0 - white) of the selected hexagon if it's colour was not fixed.
           if (currentHex.canBeColoured()) {
+            backPath.push([[e.target.id], [currentHex.colour]]);
             currentHex.colour = 0; // 0 is the 'uncoloured state' for Hexagons 
 
             e.target.style.fill = grid.getHexColour(currentHex); // No need to log the reset ?!
@@ -492,11 +521,12 @@ class Nobi {
           colourBox_size = 0.15 * h;
       let padding = 25;
       let pointy = Layout(layout_pointy, Point(hex_size, hex_size), Point(window.innerWidth / 2, window.innerHeight / 2));
-      let marker = 0.2 * hex_size;
+      let marker = 0.5 * hex_size;
       /***** Variables used for colouring *****/
 
       let dragPath = []; // Used to keep track of the path when drag-colouring  || dragPath[x][0] contains the id of the hexagon x in the grid || dragPath[x][1] contains the colour we drew over || dragPath[x][2] - time between current and last move
 
+      let backPath = [];
       let currentHex = [],
           previousHex = [],
           backtrack = []; // Used for rule-checking when drag-colouring 
@@ -567,7 +597,8 @@ class Nobi {
 
       drawlast.forEach(index => {
         const center = hex_to_pixel(pointy, board[index]);
-        drawTut1.circle(marker).fill('#000').move(center.x - marker / 2, center.y + shiftValue + shiftVertical - marker / 2).attr({
+        const colour = board.getHintColour(board[index]);
+        drawTut1.circle(marker).fill(colour).move(center.x - marker / 2, center.y + shiftValue + shiftVertical - marker / 2).attr({
           'pointer-events': 'none'
         });
       }); // Drawing the current Colour Box Indicator
@@ -680,6 +711,7 @@ class Nobi {
 
 
       const grid = new Grid();
+      grid.backPath = backPath;
       this.setMap(grid, tutorialid);
       const solution = [];
       this.getSolution(solution, tutorialid);
@@ -732,7 +764,8 @@ class Nobi {
 
       drawlast.forEach(index => {
         const center = hex_to_pixel(pointy, grid[index]);
-        draw.circle(marker).fill('#000').move(center.x - marker / 2, center.y + shiftValue + shiftVertical - marker / 2).attr({
+        const colour = grid.getHintColour(grid[index]);
+        draw.circle(marker).fill(colour).move(center.x - marker / 2, center.y + shiftValue + shiftVertical - marker / 2).attr({
           'pointer-events': 'none'
         });
       }); // Drawing the current Colour Box Indicator
@@ -755,7 +788,19 @@ class Nobi {
       function mouseMoveWhilstDown(target, whileMove) {
         // Function called, when we are done with with dragging
         let endMove = function endMove() {
-          checkIfDone(grid, solution);
+          if (dragPath.length > 1) {
+            let indexArray = [];
+            let colourArray = []; // Log data if we coloured using 'dragging'
+
+            for (let index = 1; index < dragPath.length; index++) {
+              indexArray.push(dragPath[index][0]);
+              colourArray.push(dragPath[index][1]);
+            }
+
+            backPath.push([indexArray, colourArray]);
+            checkIfDone(grid, solution);
+          }
+
           window.removeEventListener('mouseover', whileMove);
           window.removeEventListener('mouseup', endMove);
         };
@@ -822,6 +867,7 @@ class Nobi {
           if (currentColour != 0) {
             // Only start colouring, when a colour is selected (=> Not the 'uncoloured' state) 
             if (grid.noTriplets(currentHex, currentColour)) {
+              backPath.push([[e.target.id], [currentHex.colour]]);
               currentHex.colour = currentColour; // Modify colour to the current colour selected
 
               e.target.style.fill = grid.getHexColour(currentHex); // Updating the colour
@@ -918,6 +964,7 @@ class Nobi {
         if (currentHex.colour != 0) {
           // Reset the colour (set back to initial colour 0 - white) of the selected hexagon if it's colour was not fixed.
           if (currentHex.canBeColoured()) {
+            backPath.push([[e.target.id], [currentHex.colour]]);
             currentHex.colour = 0; // 0 is the 'uncoloured state' for Hexagons 
 
             e.target.style.fill = grid.getHexColour(currentHex);
@@ -1039,10 +1086,10 @@ class Nobi {
 
     _defineProperty(this, "roundedRectData", function (w, h, tlr, trr, brr, blr) {
       return 'M 0 ' + tlr + ' A ' + tlr + ' ' + tlr + ' 0 0 1 ' + tlr + ' 0' + ' L ' + (w - trr) + ' 0' + ' A ' + trr + ' ' + trr + ' 0 0 1 ' + w + ' ' + trr + ' L ' + w + ' ' + (h - brr) + ' A ' + brr + ' ' + brr + ' 0 0 1 ' + (w - brr) + ' ' + h + ' L ' + blr + ' ' + h + ' A ' + blr + ' ' + blr + ' 0 0 1 0 ' + (h - blr) + ' Z';
-    });
-
-    // Size has to be 1 or higher  -> TODO implement check
+    }); // Size has to be 1 or higher  -> TODO implement check
     // this.puzzleid = puzzleid;
+
+
     this.userid = _userid; // this.hexes = new Array();  // Array containing the svg elements
   }
   /***** Get hexagonal board of the given puzzle id *****/

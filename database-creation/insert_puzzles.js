@@ -146,6 +146,10 @@ db.serialize(() => {
     db.run("INSERT INTO puzzles_solution VALUES (2,2,-2,0,2)");
     db.run("INSERT INTO puzzles_solution VALUES (2,2,-1,-1,2)");
     db.run("INSERT INTO puzzles_solution VALUES (2,2,0,-2,4)");
+
+    // INSERT INFO FOR PUZZLE 1 AND 2
+    db.run("INSERT INTO puzzles_info VALUES (1,'5x5',3,6)")
+    db.run("INSERT INTO puzzles_info VALUES (2,'5x5',4,6)")
   
     // print them out to confirm their contents:
     /* db.each("SELECT puzzle_id, hex_q, hex_r, hex_s, hex_colour FROM puzzles", (err, row) => {
@@ -185,9 +189,9 @@ let offsetX=0,offsetY=0;
                         if(err){
                             //Oops something went wrong
                             console.log(err);
+                            console.log(insertQuery)
                         }
                     });
-                    // console.log(insertQuery)
                 // }); 
 
 
@@ -216,9 +220,9 @@ let offsetX=0,offsetY=0;
                             if(err){
                                 //Oops something went wrong
                                 console.log(err);
+                                console.log(insertQuery)
                             }
                         });
-                        console.log(insertQuery)
                     // }); 
                 }
                 break;
@@ -237,9 +241,9 @@ let offsetX=0,offsetY=0;
                             if(err){
                                 //Oops something went wrong
                                 console.log(err);
+                                console.log(insertQuery)
                             }
                         });
-                        // console.log(insertQuery)
                     // }); 
                 }
                 puzzleid++;

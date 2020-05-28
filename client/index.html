@@ -96,7 +96,7 @@
           <p class="shift-right">
             &#8627 Hint Cells:<br>
             <span class="explanation shift-right">&#x00B7 Colour can not be changed.<br></span>
-            <span class="explanation shift-right">&#x00B7 Have a slight black border around them and a black dot in the middle.</span>
+            <span class="explanation shift-right">&#x00B7 Have a slight black border around them and a slightly darker circle in the middle.</span>
             <img src="./images/Hint Cells.png" alt="Hint Cells" id="pngFixed">
             <br>&#8627 Colourable Cells:<br>
             <span class="explanation shift-right">&#x00B7 Colour can be changed.<br></span>
@@ -122,7 +122,7 @@
       <div class="tutText" class="tutBoard">
         <p class="center shift-up">The rectangular box shows you your currently selected colour <br></p>
         <p class="shift-right">
-          <i>&#x2B22 Hold Left-Click and Drag:</i> <br>
+          <i>&#x2B22 <b>Hold</b> Left-Click and Drag:</i> <br>
             <span class="explanation shift-right">&#8627 Colours dragged-over hexagons using the initially clicked hexagon's colour<br></span>
             <span class="explanation shift-right">&#8627 Drag-colouring colours until dragging over the first fixed coloured hexagon or a same-coloured hexagon.</span>
         </p>
@@ -136,12 +136,14 @@
         <h2>&#x2B21 Buttons:</h2>
         <p class="shift-right shift-up-2">
           At the bottom of the Puzzle, there are two buttons: <br>
+          <span class="shift-right">&#8627 Back Button: <span class="explanation">Go back one Move</span>  <br> </span>
           <span class="shift-right">&#8627 Reset Button: <span class="explanation">Reset the Puzzle</span>  <br> </span>
           <span class="shift-right">&#8627 Skip Button: <span class="explanation">Move on to the next Puzzle</span>  </span>
           
         </p>
 
         <div class="btn-prompt">
+          <button type="button" class="btn-Game btn-Back">Back</button>
           <button type="button" class="btn-Game btnReset">Reset</button>
           <button type="button" class="btn-Game">Skip</button>
         </div>
@@ -154,6 +156,7 @@
           &#8618 Each Puzzle has a unique solution! <br>
           &#8618 The game automatically checks for the Triplet rule (Rule &#x2460) before colouring. <br>
           &#8618 It is not possible to select white as your current colour, since it represents the 'uncoloured' state and is technically not a colour. Use Double-Click instead!<br>
+          &#8618 Drag-Click: Use a mouse for the best experience! (Double-Tap and Hold on Mousepad does not count as Drag-Click!)<br>
           &#8618 If you have succesfully coloured the whole board, but no Solved pop-up appeared, check if each colour is <b>connected</b>!
         </p>
       </div>
@@ -173,6 +176,8 @@
         <span id="rule-violation" class="warning">Rule Violation!</span>
         <div id="gameCanvas"></div>
         <div class="btn-prompt">
+          <button type="button" id="btnHelp" class="btn-Game">Help</button>
+          <button type="button" id="btnBack" class="btn-Game btn-Back">Back</button>
           <button type="button" id="btnReset" class="btn-Game btnReset">Reset</button>
           <button type="button" id="btnNextPuzzle" class="btnNext btn-Game">Skip</button>
           <button type="button" id="btnEndPuzzle" class="btnEnd btn-Game">End</button>
@@ -271,10 +276,28 @@
       <div id="tut-wrap" class="modal-wrap">
         <h2 class="overlay-H2">Finished Colouring!</h2>
         <div id="finished-content" class="modal-content">
-          <p>You will be notified once you have solved the puzzle!<br></p>
+          <p>You will be notified automatically once you have solved the puzzle!<br></p>
         </div>
         <div class="overlay-btn-prompt">
           <button type="button" id="btnTutOkay" class="btn btn-primary btn-large">Okay</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="helpOverlay" class="overlay">
+      <div id="help-wrap" class="modal-wrap">
+        <h2 class="overlay-H">Rules:</h2>
+        <div id="help-content" class="modal-content">
+          <p>&#x2460 Triplet Rule: Three Cells of the same colour never meet</p>
+          <p>&#x2461 Connect Rule: Each colour forms a single connected group</p></p>
+        </div>
+        <h2 class="overlay-H">Tips:</h2>
+        <div id="help-content" class="modal-content">
+          <p>&#8618 If you can't colour a Cell, check for Triplet Rule.</p>
+          <p>&#8618 If you finished colouring the board, but did not get a notification, check if all colours are connected.</p>
+        </div>
+        <div class="overlay-btn-prompt">
+          <button type="button" id="btnHelpOkay" class="btn btn-primary btn-large">Okay</button>
         </div>
       </div>
     </div>
