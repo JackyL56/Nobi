@@ -19,9 +19,9 @@ class Grid extends Array {
   constructor(...args) {
     super(...args);
 
-    _defineProperty(this, "colourArray", ['#FFFFFF', '#0080FF', '#FF0000', '#00BF00', '#FFC90E', '#800080', '#00FFFF', '#800000', '#646464', '#C70039', '#FF00FF', '#FF5733', '#E6B3B3', '#6680B3', '#66991A', '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC', '#66994D']);
+    _defineProperty(this, "colourArray", ['#FFFFFF', '#0000FF', '#FF0000', '#FFFF00', '#00FF00', '#FF8000', '#FF00FF', '#414141', '#00FFFF','#006700', '#6D2E0B', '#FF7777', '#6C006C', '#B2B2B2', '#66991A', '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC', '#66994D']);
 
-    _defineProperty(this, "colourArrayDark", ['#FFFFFF', '#004DCC', '#CC0000', '#008C00', '#CC9600', '#4D004D', '#00CCCC', '#4D0000', '#313131', '#940006', '#CC00CC', '#CC2400', '#B38080', '#334D80', '#336600', '#CC66B3', '#99CC00', '#CC0033', '#B30000', '#00CC99', '#33661A']);
+    _defineProperty(this, "colourArrayDark", ['#FFFFFF', '#0000CC', '#CC0000', '#CCCC00', '#00CC00', '#CC4D00', '#CC00CC', '#0E0E0E', '#00CCCC','#003400',  '#3A0000', '#CC4444', '#390039', '#7F7F7F', '#336600', '#CC66B3', '#99CC00', '#CC0033', '#B30000', '#00CC99', '#33661A']);
   }
 
   static isValidHex(value) {

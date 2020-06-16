@@ -5,7 +5,10 @@ $(document).ready(() => {
   let currentPuzzle;
   let nShapes = 6; // Number of different puzzle shapes
 
-  let nPuzzlesPerShape = 30; // Number of puzzles for each shape
+  // let nPuzzlesPerShape = 30; // Number of puzzles for each shape
+  let nPuzzlesPerShape = [15,13,11,9,7,5]; // Number of puzzles for each shape [5x5,5x7,7x7,7x9,9x9,11x11]
+  let puzzlesPerShapeLeft = [15,13,11,9,7,5]
+  let totalPuzzleCount = 60; // 15+13+11+9+7+5
 
   let puzzlesToDo = []; // Contains the id's of puzzles not done yet
 
@@ -21,29 +24,84 @@ $(document).ready(() => {
     let id = 1;
 
     for (let index = 0; index < nShapes; index++) {
-      let array = [];
+      // let array = [];
 
-      for (let puzzle = 0; puzzle < nPuzzlesPerShape; puzzle++) {
+      for (let puzzle = 0; puzzle < nPuzzlesPerShape[index]; puzzle++) {
         if (!puzzles_done.includes(id)) {
-          array.push(id);
+          // array.push(id);
+          puzzlesToDo.push(id);
+        } else {
+          // Find shape of the puzzle, which the player already completed!
+          let tmp = id; let shape = 0;
+          while(tmp>0){
+            tmp = tmp - nPuzzlesPerShape[shape];
+            shape++;
+          }
+          puzzlesPerShapeLeft[shape-1] = puzzlesPerShapeLeft[shape-1]-1;
         }
 
         id++;
       }
 
-      puzzlesToDo.push(array);
+      // puzzlesToDo.push(array);
     }
   };
 
   let getNextPuzzle = function getNextPuzzle() {
     // Check if there are still puzzles available
-    if (puzzle_done.length < nShapes * nPuzzlesPerShape) {
-      let nextPuzzleShape = puzzle_done.length % nShapes;
-      let nextPuzzleId = puzzlesToDo[nextPuzzleShape][Math.floor(Math.random() * puzzlesToDo[nextPuzzleShape].length)]; // Puzzle Id of the next Shape
+    if (puzzle_done.length < totalPuzzleCount) {
+      if(puzzle_done.length == 0){ // Every Player gets 3 "easy" puzzles in the beginning
+        puzzlesToDo.splice(puzzlesToDo.indexOf(1), 1);
+        puzzle_done.push(1);
+        puzzlesPerShapeLeft[0] = puzzlesPerShapeLeft[0]-1; 
+        return 1;
+      } 
+      if(puzzle_done.length == 1){ // Every Player gets 3 "easy" puzzles in the beginning
+      puzzlesToDo.splice(puzzlesToDo.indexOf(3), 1);
+      puzzle_done.push(3);
+      puzzlesPerShapeLeft[0] = puzzlesPerShapeLeft[0]-1;
+        return 3;
+      } 
+      if(puzzle_done.length == 2){ // A little bit trickier than Puzzle 1 and 3
+        puzzlesToDo.splice(puzzlesToDo.indexOf(2), 1);
+        puzzle_done.push(2);  
+        puzzlesPerShapeLeft[0] = puzzlesPerShapeLeft[0]-1;
+        return 2;
+      } 
 
+      // After solving all 3 "easy" Puzzles, choose the next Puzzle using a biased Roulette Selection Method.
+
+      let nextAllowedShapes = 1;
+
+      if(puzzle_done.length < (nShapes+1)) {
+        nextAllowedShapes = puzzle_done.length-1;
+      } else {
+        nextAllowedShapes = nShapes; 
+      }
+
+      //  let nextPuzzleShape = Math.ceil((Math.random() * nextAllowedShapes));
+      let range = 0;
+      for(let i = 0; i<nextAllowedShapes;i++){
+        range = range + puzzlesPerShapeLeft[i];
+      }
+
+      // index of next puzzleId
+      let pindex = Math.floor( (Math.random() * range))
+      let nextPuzzleId = puzzlesToDo[pindex];
+
+      // Find shape of the puzzle
+      let tmp = nextPuzzleId; let shape = 0;
+      while(tmp>0){
+        tmp = tmp - nPuzzlesPerShape[shape];
+        shape++;
+      }
+
+      puzzlesToDo.splice(puzzlesToDo.indexOf(nextPuzzleId), 1);
       puzzle_done.push(nextPuzzleId);
-      puzzlesToDo[nextPuzzleShape].splice(puzzlesToDo[nextPuzzleShape].indexOf(nextPuzzleId), 1);
+      puzzlesPerShapeLeft[shape-1] = puzzlesPerShapeLeft[shape-1]-1;
+
       return nextPuzzleId;
+      
     } else {
       $('#finishedOverlay').show();
       return false;

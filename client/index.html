@@ -71,7 +71,7 @@
               <!-- <p>You will first go through a short tutorial on the rules of the puzzle.</p> -->
               <p class="disclosure">Do not resize your browser after pressing start for the best experience!</p>
               <p class="disclosure">This web application uses Javascript. Make sure to enable it if the Start button does not work.</p>
-              <p class="disclosure">If you decide to quit and come back another time, enter the <b><em>exact same</em></b> information on this page. (Tip: Make your Username is as unique as possible)
+              <p class="disclosure">If you decide to quit and come back another time, enter the <b><em>exact same</em></b> information on this page. (Tip: Make your Username as unique as possible)
               </p>
             </div>
             <button type="button" id="btnStart" class="btn btn-primary btn-block btn-large">Start</button>  
@@ -93,7 +93,7 @@
         </div>
         <h2>&#x2B21 Types of cells:</h2>
         <div>
-          <p class="shift-right">
+          <p>
             &#8627 Hint Cells:<br>
             <span class="explanation shift-right">&#x00B7 Colour can not be changed.<br></span>
             <span class="explanation shift-right">&#x00B7 Have a slight black border around them and a slightly darker circle in the middle.</span>
@@ -106,12 +106,12 @@
         </div>
         <h2>&#x2B21 How to colour the cells:</h2>
         <div>
-          <p class="shift-right">
-            &#x2B22 <i>Left-Click:</i> <br>
-            <span class="explanation shift-right">&#x00B7 Fixed Cells: Select Colour</span> <br>
-            <span class="explanation shift-right">&#x00B7 Colourable Cells: Colour using selected colour (If Rule &#x2460 is not violated)</span> <br>
-            &#x2B22 <i>Right-Click:</i> <span class="explanation">Select the colour</span> <br>
-            &#x2B22 <i>Double-Click:</i> <span class="explanation">Uncolour</span><br>
+          <p>
+            &#x2B22 <i>Left-Click:</i><br>
+            <span class="explanation shift-right">&#x00B7 Fixed Cells: Select Colour<br></span>
+            <span class="explanation shift-right">&#x00B7 Colourable Cells: Colour using selected colour (If Rule &#x2460 is not violated)<br></span> 
+            <br>&#x2B22 <i>Right-Click:</i> <span class="explanation shift-right">Select the colour<br></span> 
+            <br>&#x2B22 <i>Double-Click:</i> <span class="explanation shift-right">Uncolour<br></span>
           </p>
         </div>
         <p class="shift-down center">Try it out on the following board below:</p>
@@ -135,7 +135,7 @@
       <div class="tutText">
         <h2>&#x2B21 Buttons:</h2>
         <p class="shift-right shift-up-2">
-          At the bottom of the Puzzle, there are two buttons: <br>
+          At the bottom of the Puzzle, there are three buttons: <br>
           <span class="shift-right">&#8627 Back Button: <span class="explanation">Go back one Move</span>  <br> </span>
           <span class="shift-right">&#8627 Reset Button: <span class="explanation">Reset the Puzzle</span>  <br> </span>
           <span class="shift-right">&#8627 Skip Button: <span class="explanation">Move on to the next Puzzle</span>  </span>
@@ -154,10 +154,10 @@
         <h2>&#x2B21 Notes:</h2>
         <p class="shift-right">
           &#8618 Each Puzzle has a unique solution! <br>
-          &#8618 The game automatically checks for the Triplet rule (Rule &#x2460) before colouring. <br>
-          &#8618 It is not possible to select white as your current colour, since it represents the 'uncoloured' state and is technically not a colour. Use Double-Click instead!<br>
-          &#8618 Drag-Click: Use a mouse for the best experience! (Double-Tap and Hold on Mousepad does not count as Drag-Click!)<br>
-          &#8618 If you have succesfully coloured the whole board, but no Solved pop-up appeared, check if each colour is <b>connected</b>!
+          <br>&#8618 The game automatically checks for the Triplet rule (Rule &#x2460) before colouring. <br>
+          <br>&#8618 It is not possible to select white as your current colour, since it represents the 'uncoloured' state and is technically not a colour. Use Double-Click instead!<br>
+          <br>&#8618 Drag-Click: Use a mouse for the best experience! (Double-Tap and Hold on Mousepad does not count as Drag-Click!)<br>
+          <br>&#8618 If you have succesfully coloured the whole board, but no Solved pop-up appeared, check if each colour is <b>connected</b>!
         </p>
       </div>
       
@@ -176,7 +176,7 @@
         <span id="rule-violation" class="warning">Rule Violation!</span>
         <div id="gameCanvas"></div>
         <div class="btn-prompt">
-          <button type="button" id="btnHelp" class="btn-Game">Help</button>
+          <button type="button" id="btnHelp" class="btn-Game">&#8505</button>
           <button type="button" id="btnBack" class="btn-Game btn-Back">Back</button>
           <button type="button" id="btnReset" class="btn-Game btnReset">Reset</button>
           <button type="button" id="btnNextPuzzle" class="btnNext btn-Game">Skip</button>
@@ -191,7 +191,7 @@
           <p>Do you confirm you want to skip this puzzle?</p>
         </div>
         <div class="overlay-btn-prompt">
-          <button type="button" id="btnNextYes" class="btn btn-primary btn-large">Confirm</button>
+          <button type="button" id="btnNextYes" class="btn btn-primary btn-large">Yes</button>
           <button type="button" id="btnNextNo" class="btn btn-primary btn-large">Back</button>
         </div>
       </div>
@@ -252,7 +252,7 @@
             <p>Do you confirm you want to stop?</p>
           </div>
           <div class="overlay-btn-prompt">
-            <button type="button" id="btnEndYes" class="btn btn-primary btn-large">Confirm</button>
+            <button type="button" id="btnEndYes" class="btn btn-primary btn-large">Yes</button>
             <button type="button" id="btnEndNo" class="btn btn-primary btn-large">Back</button>
           </div>
         </div>

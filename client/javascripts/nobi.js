@@ -18,7 +18,8 @@ function _defineProperty(obj, key, value) {
 class Nobi {
   constructor(_userid) {
     _defineProperty(this, "drawBoard", function (puzzleid) {
-      let userid = this.userid; // console.log("USER : " + userid + " ON PUZZLE: " + puzzleid);
+      let userid = this.userid; 
+      // console.log("USER : " + userid + " ON PUZZLE: " + puzzleid);
 
       /*****  Variables to set the size of the canvas, board and hexagons *****/
 
@@ -552,7 +553,7 @@ class Nobi {
 
       let drawlast = []; // setViewingVariables();
 
-      let drawTut1 = SVG().addTo('#tutBoard1').size(width, 400); // Drawing the Hexagon SVGs
+      let drawTut1 = SVG().addTo('#tutBoard1').size(width, 9*hex_size); // Drawing the Hexagon SVGs
 
       for (let index = 0; index < board.length; index++) {
         if (board[index].canBeColoured()) {
