@@ -336,7 +336,12 @@ $(document).ready(() => {
   });
   $('#btnHelpOkay').click(function () {
     $('#helpOverlay').hide();
-  }); // Checks if the form is filled.
+  }); 
+  $('#btnReminder').click(function () {
+    $('#reminderOverlay').hide();
+  }); 
+  
+  // Checks if the form is filled.
 
   function formcheck() {
     $('.alert').hide();

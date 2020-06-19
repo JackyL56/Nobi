@@ -59,6 +59,8 @@ class Nobi {
           moveNumber = 0; /// Used to calculate the time needed between each move
       //   SVG.on(document, 'DOMContentLoaded', function() {
 
+      let reminded  = false; // Used for the reminder that all colours should be connected overlay (Once per puzzle)
+
       /***** Initializing the grid containing the hexagons and the respective solution grid for the puzzle*****/
 
       const grid = new Grid();
@@ -438,40 +440,56 @@ class Nobi {
       }
       /***** Function to check, if the current state of the puzzle corresponds to the solution *****/
 
+      function checkIfAllColoured(grid){
+          for (let index = 0; index < grid.length; index++) {
+            if (grid[index].colour == 0) {
+              return false;
+            }
+          }
+          return true;
+      }
 
       function checkIfDone(grid, solution) {
         // Comparing each Hexagons colour
-        for (let i = 0; i < solution.length; i++) {
-          if (solution[i].colour != grid.getHex(solution[i].q, solution[i].r).colour) {
-            return false;
-          }
-        } // Current State is the same as the solution:
-        // Reset Stars
-
-
-        let dstars = $('.rating :input[name="drating"]');
-
-        for (const key in dstars) {
-          if (dstars.hasOwnProperty(key)) {
-            if (dstars[key].checked) {
-              dstars[key].checked = false;
+        if(checkIfAllColoured(grid)){
+          for (let i = 0; i < solution.length; i++) {
+            if (solution[i].colour != grid.getHex(solution[i].q, solution[i].r).colour) {
+              if(!reminded){
+                $("#reminderOverlay").show();
+                reminded = true;
+              }
+              return false;
             }
           }
+          // Current State is the same as the solution:
+          // Reset Stars
+  
+          let dstars = $('.rating :input[name="drating"]');
+  
+          for (const key in dstars) {
+            if (dstars.hasOwnProperty(key)) {
+              if (dstars[key].checked) {
+                dstars[key].checked = false;
+              }
+            }
+          }
+  
+          let istars = $('.rating :input[name="irating"]');
+  
+          for (const key in istars) {
+            if (istars.hasOwnProperty(key)) {
+              if (istars[key].checked) {
+                istars[key].checked = false;
+              }
+            }
+          } // Show the Solved Pop Up Box
+  
+  
+          $("#solvedOverlay").show();
+          return true; 
+
         }
-
-        let istars = $('.rating :input[name="irating"]');
-
-        for (const key in istars) {
-          if (istars.hasOwnProperty(key)) {
-            if (istars[key].checked) {
-              istars[key].checked = false;
-            }
-          }
-        } // Show the Solved Pop Up Box
-
-
-        $("#solvedOverlay").show();
-        return true;
+        return false;
       }
       /***** Logging the move *****/
 
@@ -708,7 +726,8 @@ class Nobi {
             }
         });
         return done; */
-      } //*************************************** Drawing second Tutorial Board *********************************************************/
+      } 
+      //*************************************** Drawing second Tutorial Board *********************************************************/
 
 
       const grid = new Grid();

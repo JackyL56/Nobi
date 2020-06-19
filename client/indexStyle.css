@@ -68,7 +68,7 @@ body {
 #tutorialPage{
 	width: 100%;
 	display: none;
-	overflow: hidden;
+	overflow: visible; 
 }
 
 #tutBoard{
@@ -314,6 +314,7 @@ h2.overlay-H2 {
 #pop-wrap{z-index: 1011;}
 
 #endOverlay{z-index: 1012;}
+#reminderOverlay{z-index: 1009;}
 
 
 .overlay-btn-prompt .btn {
