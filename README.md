@@ -5,4 +5,4 @@ Developed by Jacky Liu for the Bachelor Thesis Paper: "_What Makes a Puzzle Inte
 Auto-Generated Puzzles_".
 
 
-![alt text](https://github.com/JackyL56/Nobi/blob/master/puzzlePage.png)
+![alt text](https://github.com/JackyL56/Nobi/blob/master/puzzle.png)
